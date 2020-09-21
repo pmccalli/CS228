@@ -1,163 +1,82 @@
-var controllerOptions = {};
-rawXMin = 99;
-rawYMin = 99;
-rawXMax = 1;
-rawYMax = 1;
-
-i = 0;
-x = 0;
-y = 0;
-z = 0;
-function HandleFrame(frame){
-	if(frame.hands.length == 1){
-		hand = frame.hands[0];
-		HandleHand(hand);
-	}
-	else {
-		circle(width/2, height/2, 50);
-	}
-}
-function HandleHand(hand){
-	
-	let fingers = hand['fingers'];
-	for (i in fingers){
-		let finger = fingers[i];
-		HandleFinger(finger)
-	}
-}function HandleFinger(finger){
-	
-	let bones = finger['bones'];
-	for(i in bones){
-		let bone = bones[i];
-		strokeWeight(5 - i);
-		stroke(180 - (i*40));
-		HandleBone(bone)
-		
-	}
-
-	//console.log(finger);
-	
-	
-	//console.log(index);
-	tip = finger['tipPosition'];
-	//console.log(tip);
-	x = tip[0];
-	y = tip[1];
-	z = tip[2];
-	
-	// rawXMin scales to canvas 0
-	// rawXMax scales to canvas width
-	// rawYMin scales to canvas 0
-	// rawYMax scales to canvas height
-	
-	let rawXRange = rawXMax - rawXMin; // total range the finger has to move 
-	let rawYRange = rawYMax - rawYMin;
-	
-	let xShift = x - rawXMin; // how far x is away from the min of x
-	let yShift = y - rawYMin;
-	
-	let xRatio = xShift/rawXRange;
-	let yRatio = yShift/rawYRange;
-	//console.log(xRatio, yRatio);
-	
-	let canvasX = xRatio * width;
-	let canvasY = yRatio * height;
-	
-	//circle(canvasX, canvasY, 50);
-
-	
-	if(rawXMin > x){
-		rawXMin = x;
-	}
-	if(rawYMin < y){
-		rawYMin = y;
-	}
-	if(rawXMax < x){
-		rawXMax = x;
-	}
-	if(rawYMax > y){
-		rawYMax = y;
-	}
-	//console.log(rawXMin, rawYMin, rawXMax, rawYMax)
-	
-}
-function HandleBone(bone){
-	//console.log(bone);
-	
-	let boneStartX = bone['prevJoint'][0];
-	let boneStartY = bone['prevJoint'][1];
-	start =  TransformCoordinates(boneStartX,boneStartY);
-	let boneEndX = bone['nextJoint'][0];
-	let boneEndY = bone['nextJoint'][1];
-	
-	end = TransformCoordinates(boneEndX,boneEndY);
-	//circle(boneStartX, boneStartY, 5);
-	//circle(boneEndX, boneEndY, 5);
-	
-	line(start[0], start[1], end[0], end[1]);
-	//console.log(start,end)
-	/*
-	let basis = bone['basis'];
-	
-	let tip = basis[0];
-	x = tip[0];
-	y = tip[1];
-	z = tip[2];
-	//console.log(bone);
-	//console.log(tip);
-	*/
-	
-	
-
-	
-	
-
-	
-	/*if(rawXMin > x){
-		rawXMin = x;
-	}
-	if(rawYMin < y){
-		rawYMin = y;
-	}
-	if(rawXMax < x){
-		rawXMax = x;
-	}
-	if(rawYMax > y){
-		rawYMax = y;
-	}*/
-	
-}	
-function TransformCoordinates(x,y){
-	let rawXRange = rawXMax - rawXMin; // total range the finger has to move 
-	let rawYRange = rawYMax - rawYMin;
-	
-	let xShift = x - rawXMin; // how far x is away from the min of x
-	let yShift = y - rawYMin;
-	
-	let xRatio = xShift/rawXRange;
-	let yRatio = yShift/rawYRange;
-	//console.log(xRatio, yRatio);
-	
-	let canvasX = xRatio * width;
-	let canvasY = yRatio * height;
-	return [canvasX,canvasY]
-}
-
-
-
-Leap.loop(controllerOptions, function(frame) {
-	
+oneFrameOfData = nj.array([[[ 126.278, 130.568, 195.094, 126.278, 130.568, 195.094],
+        [ 126.278, 130.568, 195.094, 155.473, 135.276, 154.879],
+        [ 155.473, 135.276, 154.879, 167.653, 133.399, 123.089],
+        [ 167.653, 133.399, 123.089, 171.798, 129.712, 100.352]],
+       [[ 118.412, 148.585,  181.85, 132.374, 128.881, 112.357],
+        [ 132.374, 128.881, 112.357,  136.62, 100.955, 79.9863],
+        [  136.62, 100.955, 79.9863, 138.504, 81.2552, 66.1084],
+        [ 138.504, 81.2552, 66.1084, 139.543, 65.8692, 58.7526]],
+       [[ 106.611, 149.739, 178.528, 110.353, 130.877, 111.463],
+        [ 110.353, 130.877, 111.463, 110.411, 100.491, 74.0464],
+        [ 110.411, 100.491, 74.0464, 111.462, 78.0641,  56.595],
+        [ 111.462, 78.0641,  56.595, 112.604, 61.6256, 47.5612]],
+       [[ 94.4468, 148.487, 177.348,   88.35, 131.551,  117.35],
+        [   88.35, 131.551,  117.35, 87.1342, 105.104, 81.3593],
+        [ 87.1342, 105.104, 81.3593, 87.8255, 84.4559, 62.9041],
+        [ 87.8255, 84.4559, 62.9041, 88.9681, 68.8858, 52.6397]],
+       [[ 82.5335, 141.292, 180.324, 68.8521, 128.166, 125.527],
+        [ 68.8521, 128.166, 125.527, 67.0214,  109.16, 95.7658],
+        [ 67.0214,  109.16, 95.7658, 67.8099, 95.4713, 81.8177],
+        [ 67.8099, 95.4713, 81.8177,  69.601, 81.8081, 71.4632]]])
+anotherFrameOfData = nj.array([[[100.015, 113.66, 162.32,100.015, 113.66, 162.32],
+        [100.015, 113.66, 162.32,134.889,111.784,126.654],
+        [110.902,120.361, 112.98, 120.22,111.935,81.2834],
+        [ 120.22,111.935,81.2834,129.461,107.039,60.3461]],
+       [[74.3379,147.291,141.811,109.589,148.447,77.2467],
+        [109.589,148.447,77.2467,126.398,133.071,40.8211],
+        [126.398,133.071,40.8211,135.254,121.845, 21.334],
+        [135.254,121.845, 21.334,141.166,112.699, 8.1687]],
+       [[ 63.984,149.508,135.526,88.7194,150.894,70.3046],
+        [88.7194,150.894,70.3046, 101.51,130.643,28.4769],
+        [ 101.51,130.643,28.4769,109.036,114.499,6.31036],
+        [109.036,114.499,6.31036,113.916,102.112,-6.95232]],
+       [[52.8383,148.806,130.406,65.9742,150.105,69.1729],
+        [65.9742,150.105,69.1729,77.4431,130.903,30.4946],
+        [77.4431,130.903,30.4946,84.9715,114.436,9.52938],
+        [84.9715,114.436,9.52938, 90.127,101.493,-2.92043]],
+       [[41.1656,141.207,127.481, 45.254,144.737,69.7479],
+        [ 45.254,144.737,69.7479, 49.052,132.989,36.6144],
+        [ 49.052,132.989,36.6144,52.4304,123.412,19.8984],
+        [52.4304,123.412,19.8984,56.1327,113.253,6.47471]]])
+frameIndex = 0;
+flip = 0;
+function draw(){
 	clear();
-	HandleFrame(frame);
-	//p = Math.floor(Math.random()*2) == 1 ? 1 : -1
-	//g = Math.floor(Math.random()*2) == 1 ? 1 : -1
-	//console.log(i)
+	for(let i = 0; i < 4; i++){
+		for(let j = 0; j < 5; j++){
+			if(flip==0){	
+				xStart = oneFrameOfData.get(i,j,0);
+				yStart = oneFrameOfData.get(i,j,1);
+				zStart = oneFrameOfData.get(i,j,2);
+				xEnd = oneFrameOfData.get(i,j,3);
+				yEnd = oneFrameOfData.get(i,j,4);
+				zEnd = oneFrameOfData.get(i,j,5);
+				line(xStart,yStart, xEnd, yEnd);
+			}
+			else{
+				xaStart = anotherFrameOfData.get(i,j,0);
+				yaStart = anotherFrameOfData.get(i,j,1);
+				zaStart = anotherFrameOfData.get(i,j,2);
+				xaEnd = anotherFrameOfData.get(i,j,3);
+				yaEnd = anotherFrameOfData.get(i,j,4);
+				zaEnd = anotherFrameOfData.get(i,j,5);
+				//console.log(xStart, yStart,xEnd,yEnd);
+				line(xaStart,yaStart, xaEnd, yaEnd);
+				
+				
+			}
+			if(frameIndex == 1000){
+				frameIndex = 0;
+				flip = 1-flip;
+				console.log(flip);
+			}
+			
+			frameIndex++;
+			
+			
+		}
+	}
+	//console.log(width/2);
+	//console.log(xStart, yStart,zStart,xEnd,yEnd,zEnd);
 	
-	
-	
-		//console.log(fingers);
-		
-	
-	
-	
-});
+}

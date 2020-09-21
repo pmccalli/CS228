@@ -112,12 +112,12 @@ function HandleBone(bone, fingerIndex, boneIndex){
 	//circle(boneStartX, boneStartY, 5);
 	//circle(boneEndX, boneEndY, 5);
 	temp = boneEndX + boneStartX + boneEndY + boneStartY + boneEndZ + boneStartZ;
-	oneFrameOfData.set(fingerIndex, boneIndex, boneStartX, temp);
-	oneFrameOfData.set(fingerIndex, boneIndex, boneStartY, temp);
-	oneFrameOfData.set(fingerIndex, boneIndex, boneStartZ, temp);
-	oneFrameOfData.set(fingerIndex, boneIndex, boneEndX, temp);
-	oneFrameOfData.set(fingerIndex, boneIndex, boneEndY, temp);
-	oneFrameOfData.set(fingerIndex, boneIndex, boneEndZ, temp);
+	oneFrameOfData.set(fingerIndex, boneIndex, 0, boneStartX);
+	oneFrameOfData.set(fingerIndex, boneIndex, 1, boneStartY);
+	oneFrameOfData.set(fingerIndex, boneIndex, 2, boneStartZ);
+	oneFrameOfData.set(fingerIndex, boneIndex, 3, boneEndX);
+	oneFrameOfData.set(fingerIndex, boneIndex, 4, boneEndY);
+	oneFrameOfData.set(fingerIndex, boneIndex, 5, boneEndZ);
 	line(start[0], start[1], end[0], end[1]);
 	//console.log(start,end)
 	/*
@@ -153,6 +153,8 @@ function HandleBone(bone, fingerIndex, boneIndex){
 }	
 function RecordData(){
 	background(0);
+	console.log('***');
+	console.log(oneFrameOfData.toString());
 }
 function TransformCoordinates(x,y){
 	let rawXRange = rawXMax - rawXMin; // total range the finger has to move 
@@ -179,7 +181,7 @@ Leap.loop(controllerOptions, function(frame) {
 	HandleFrame(frame);
 	previousNumHands = currentNumHands;
 	
-	console.log(oneFrameOfData.toString());
+	
 	//p = Math.floor(Math.random()*2) == 1 ? 1 : -1
 	//g = Math.floor(Math.random()*2) == 1 ? 1 : -1
 	//console.log(i)
