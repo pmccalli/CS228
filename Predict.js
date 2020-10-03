@@ -160,7 +160,7 @@ let numFeatures = nj.zeros(150, 4);
 
 
 function draw(){
-	console.log("Draw");
+	//console.log("Draw");
 	
 	
 	
@@ -188,13 +188,13 @@ function Train(){
 	}
 }
 function Test(){
-	console.log("Test");
+	//console.log("Test");
 	
 	//console.log('I am being tested, (insert pun)');
 		//console.log(irisData);
 		currentFeatures = irisData.pick(testingSampleIndex).slice([-3]);
 		currentLabel = irisData.pick(testingSampleIndex).get(4);
-		console.log(currentFeatures.toString(), currentLabel.toString());
+		//console.log(currentFeatures.toString(), currentLabel.toString());
 		//console.log(testingSampleIndex);
 		//console.log(irisData);
 		//console.log(iris);
@@ -226,7 +226,7 @@ function GotResults(err, result){
 }
 
 function DrawCircles(){
-	console.log("DrawCircles");
+	//console.log("DrawCircles");
 		
 		for(i = 0; i <= 149; i++){
 			x = irisData.get(i, 0);
@@ -234,6 +234,9 @@ function DrawCircles(){
 			x = x * 100;
 			y = y * 100;
 			c = irisData.get(i, 4);
+			p = predictedClassLabels.get(0, i);
+			console.log(p.toString());
+			//console.log(predictedClassLabels.shape);
 			if(c == 0){
 				fill('red');
 			}
@@ -247,13 +250,13 @@ function DrawCircles(){
 				stroke('black');
 			}
 			else{
-				if(c == 0){
+				if(p == 0){
 				stroke('red');
 				}
-				else if(c == 1){
+				else if(p == 1){
 					stroke('blue');
 				}
-				else if(c == 2){
+				else if(p == 2){
 					stroke('green');
 				}
 			}
