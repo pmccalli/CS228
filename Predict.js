@@ -178,7 +178,7 @@ function Train(){
 	//console.log('I am being trained, Choo Choo!');
 	for(let i = 0; i <= 149; i+= 2){
 		//console.log(i);
-		currentFeatures = irisData.pick(i).slice([-3]);
+		currentFeatures = irisData.pick(i).slice([-1]);
 		//console.log(currentFeatures.toString())
 		currentLabel = irisData.pick(i).get(4);
 		//console.log(currentLabel.toString());
@@ -192,7 +192,7 @@ function Test(){
 	
 	//console.log('I am being tested, (insert pun)');
 		//console.log(irisData);
-		currentFeatures = irisData.pick(testingSampleIndex).slice([-3]);
+		currentFeatures = irisData.pick(testingSampleIndex).slice([-1]);
 		currentLabel = irisData.pick(testingSampleIndex).get(4);
 		//console.log(currentFeatures.toString(), currentLabel.toString());
 		//console.log(testingSampleIndex);
@@ -210,14 +210,16 @@ function GotResults(err, result){
 	//console.log(err);
 	//console.log(result);
 	if(result) {
+		//console.log(result);
 		//console.log(parseInt(result.label));
 		//console.log(result);
-		predictedClassLabels.set(testingSampleIndex,parseInt(result.label));
+		predictedClassLabels.set(testingSampleIndex, 0, parseInt(result.label));
 		//console.log(testingSampleIndex);
 		testingSampleIndex = testingSampleIndex + 2;
 		if(testingSampleIndex >= 150){
 			testingSampleIndex = 1;
 		}
+		console.log(predictedClassLabels);
 		//console.log(testingSampleIndex, parseInt(result.label));
 	}
 	else {
@@ -234,8 +236,8 @@ function DrawCircles(){
 			x = x * 100;
 			y = y * 100;
 			c = irisData.get(i, 4);
-			p = predictedClassLabels.get(0, i);
-			console.log(p.toString());
+			p = predictedClassLabels.get(i,0);
+			//console.log(predictedClassLabels.get(0, i));
 			//console.log(predictedClassLabels.shape);
 			if(c == 0){
 				fill('red');

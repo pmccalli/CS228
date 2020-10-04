@@ -1,5 +1,31 @@
 var controllerOptions = {};
 var oneFrameOfData = nj.zeros([5,4,6]);
+<canvas id="displayArea" width="200" height="100" style="background:#dddddd;"></canvas>
+	var canvasElement = document.getElementById("displayArea");
+			var displayArea = canvasElement.getContext("2d");
+
+			var controller = new Leap.Controller();
+			controller.on("frame", function(frame){
+				if(frame.pointables.length > 0)
+				{
+					window.innerWidth = window.innerWidth; //clear
+					
+					//Get a pointable and normalize the tip position
+					var pointable = frame.pointables[0];
+					var interactionBox = frame.interactionBox;
+					var normalizedPosition = interactionBox.normalizePoint(pointable.tipPosition, true);
+					
+					// Convert the normalized coordinates to span the canvas
+					var canvasX = window.innerWidth * normalizedPosition[0];
+					var canvasY = window.innerHeight * (1 - normalizedPosition[1]);
+					//we can ignore z for a 2D context
+					
+					displayArea.strokeText("(" + canvasX.toFixed(1) + ", " + canvasY.toFixed(1) + ")", canvasX, canvasY);
+				}
+			});
+			controller.connect();
+
+
 rawXMin = 99;
 rawYMin = 99;
 rawXMax = 1;
@@ -14,23 +40,24 @@ function HandleFrame(frame){
 	console.log(frame.hands);
 	if(frame.hands.length > 0){
 		hand = frame.hands[0];
-		HandleHand(hand);
+		var interactionBox = frame.interactionBox;
+		HandleHand(hand, interactionBox);
 	}
 	else {
 		//circle(width/2, height/2, 50);
 	}
 }
-function HandleHand(hand){
+function HandleHand(hand,interactionBox){
 	
 	let fingers = hand['fingers'];
 	for (i in fingers){
 		let fingerIndex = i;
 		let finger = fingers[i];
-		HandleFinger(finger, fingerIndex)
+		HandleFinger(finger, fingerIndex, interactionBox)
 	}
 }
 
-function HandleFinger(finger, fingerIndex){
+function HandleFinger(finger, fingerIndex, interactionBox){
 	
 	let bones = finger['bones'];
 	for(i in bones){
@@ -44,7 +71,7 @@ function HandleFinger(finger, fingerIndex){
 			stroke(255 - (i*40),0,0);
 		}
 		
-		HandleBone(bone, fingerIndex, boneIndex)
+		HandleBone(bone, fingerIndex, boneIndex, interactionBox)
 		if(previousNumHands == 2 && currentNumHands == 1){
 			
 			RecordData()
@@ -97,7 +124,7 @@ function HandleFinger(finger, fingerIndex){
 	//console.log(rawXMin, rawYMin, rawXMax, rawYMax)
 	
 }
-function HandleBone(bone, fingerIndex, boneIndex){
+function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 	//console.log(bone);
 	
 	let boneStartX = bone['prevJoint'][0];
@@ -107,7 +134,9 @@ function HandleBone(bone, fingerIndex, boneIndex){
 	let boneEndX = bone['nextJoint'][0];
 	let boneEndY = bone['nextJoint'][1];
 	let boneEndZ = bone['nextJoint'][2];
-	
+	normalizedPrevJoint = interactionBox.normalizePoint(bone['prevJoint'], true);
+	normalizedNextJoint = interactionBox.normalizePoint(bone['nextJoint'], true);
+	console.log(normalizedNextJoint, normalizedPrevJoint);
 	end = TransformCoordinates(boneEndX,boneEndY,boneEndZ);
 	//circle(boneStartX, boneStartY, 5);
 	//circle(boneEndX, boneEndY, 5);
