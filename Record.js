@@ -1,29 +1,37 @@
+nj.config.printThreshold = 1000;
 var controllerOptions = {};
-var oneFrameOfData = nj.zeros([5,4,6]);
-<canvas id="displayArea" width="200" height="100" style="background:#dddddd;"></canvas>
-	var canvasElement = document.getElementById("displayArea");
-			var displayArea = canvasElement.getContext("2d");
+var numSamples = 2;
+var framesOfData = nj.zeros([5,4,6, numSamples]);
+var currentSample = 0;
+id="displayArea";
+ width="200";
+ height="100";
+ style="background:#dddddd;";
 
-			var controller = new Leap.Controller();
-			controller.on("frame", function(frame){
-				if(frame.pointables.length > 0)
-				{
-					window.innerWidth = window.innerWidth; //clear
-					
-					//Get a pointable and normalize the tip position
-					var pointable = frame.pointables[0];
-					var interactionBox = frame.interactionBox;
-					var normalizedPosition = interactionBox.normalizePoint(pointable.tipPosition, true);
-					
-					// Convert the normalized coordinates to span the canvas
-					var canvasX = window.innerWidth * normalizedPosition[0];
-					var canvasY = window.innerHeight * (1 - normalizedPosition[1]);
-					//we can ignore z for a 2D context
-					
-					displayArea.strokeText("(" + canvasX.toFixed(1) + ", " + canvasY.toFixed(1) + ")", canvasX, canvasY);
-				}
-			});
-			controller.connect();
+console.log(document.getElementById("displayArea")); //this returns null something went wrong
+
+
+
+var controller = new Leap.Controller();
+controller.on("frame", function(frame){
+    if(frame.pointables.length > 0)
+    {
+        //canvasElement.width = window.innerWidth; //clear
+        
+        //Get a pointable and normalize the tip position
+        var pointable = frame.pointables[0];
+        var interactionBox = frame.interactionBox;
+        var normalizedPosition = interactionBox.normalizePoint(pointable.tipPosition, true);
+        
+        // Convert the normalized coordinates to span the canvas
+        var canvasX = window.innerWidth * normalizedPosition[0];
+        var canvasY = window.innerHeight * (1 - normalizedPosition[1]);
+        //we can ignore z for a 2D context
+        
+        displayArea.strokeText("(" + canvasX.toFixed(1) + ", " + canvasY.toFixed(1) + ")", canvasX, canvasY);
+    }
+});
+controller.connect();
 
 
 rawXMin = 99;
@@ -72,10 +80,10 @@ function HandleFinger(finger, fingerIndex, interactionBox){
 		}
 		
 		HandleBone(bone, fingerIndex, boneIndex, interactionBox)
-		if(previousNumHands == 2 && currentNumHands == 1){
+		
 			
-			RecordData()
-		}
+		RecordData()
+		
 	}
 
 	//console.log(finger);
@@ -126,28 +134,29 @@ function HandleFinger(finger, fingerIndex, interactionBox){
 }
 function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 	//console.log(bone);
-	
-	let boneStartX = bone['prevJoint'][0];
-	let boneStartY = bone['prevJoint'][1];
-	let boneStartZ = bone['prevJoint'][2];
-	start =  TransformCoordinates(boneStartX,boneStartY,boneStartZ);
-	let boneEndX = bone['nextJoint'][0];
-	let boneEndY = bone['nextJoint'][1];
-	let boneEndZ = bone['nextJoint'][2];
 	normalizedPrevJoint = interactionBox.normalizePoint(bone['prevJoint'], true);
-	normalizedNextJoint = interactionBox.normalizePoint(bone['nextJoint'], true);
-	console.log(normalizedNextJoint, normalizedPrevJoint);
-	end = TransformCoordinates(boneEndX,boneEndY,boneEndZ);
-	//circle(boneStartX, boneStartY, 5);
-	//circle(boneEndX, boneEndY, 5);
+	normalizedNextJoint = interactionBox.normalizePoint(bone['nextJoint'], true)
+	let boneStartX = normalizedPrevJoint[0];
+	//console.log(bone['prevJoint']);
+	let boneStartY = normalizedPrevJoint[1];
+	let boneStartZ = normalizedPrevJoint[2];
+	
+	let boneEndX = normalizedNextJoint[0];
+	let boneEndY = normalizedNextJoint[1];
+	let boneEndZ = normalizedNextJoint[2];
+	//console.log( framesOfData.pick(null,null,null,1).toString() );
+	
+	//console.log(boneStartX);
+	//console.log(normalizedNextJoint, normalizedPrevJoint);
+	//console.log(bone['prevJoint'])
 	temp = boneEndX + boneStartX + boneEndY + boneStartY + boneEndZ + boneStartZ;
-	oneFrameOfData.set(fingerIndex, boneIndex, 0, boneStartX);
-	oneFrameOfData.set(fingerIndex, boneIndex, 1, boneStartY);
-	oneFrameOfData.set(fingerIndex, boneIndex, 2, boneStartZ);
-	oneFrameOfData.set(fingerIndex, boneIndex, 3, boneEndX);
-	oneFrameOfData.set(fingerIndex, boneIndex, 4, boneEndY);
-	oneFrameOfData.set(fingerIndex, boneIndex, 5, boneEndZ);
-	line(start[0], start[1], end[0], end[1]);
+	framesOfData.set(fingerIndex, boneIndex, 0, currentSample, boneStartX);
+	framesOfData.set(fingerIndex, boneIndex, 1, currentSample, boneStartY);
+	framesOfData.set(fingerIndex, boneIndex, 2, currentSample, boneStartZ);
+	framesOfData.set(fingerIndex, boneIndex, 3, currentSample, boneEndX);
+	framesOfData.set(fingerIndex, boneIndex, 4, currentSample, boneEndY);
+	framesOfData.set(fingerIndex, boneIndex, 5, currentSample, boneEndZ);
+	line(normalizedPrevJoint[0] * window.innerWidth, (1 - normalizedPrevJoint[1])* window.innerHeight, normalizedNextJoint[0]*window.innerWidth, (1 - normalizedNextJoint[1])*window.innerHeight);
 	//console.log(start,end)
 	/*
 	let basis = bone['basis'];
@@ -181,11 +190,22 @@ function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 	
 }	
 function RecordData(){
-	background(0);
-	console.log('***');
-	console.log(oneFrameOfData.toString());
+	if(currentNumHands == 2){
+		currentSample = currentSample + 1;
+		if(currentSample == numSamples){
+			currentSample = 0;
+		}
+	} 
+	if(previousNumHands == 2 && currentNumHands == 1){
+		background(0);
+		console.log('***');
+		console.log(framesOfData.toString());
+	}
+	
+	
+	
 }
-function TransformCoordinates(x,y){
+/*function TransformCoordinates(x,y){
 	let rawXRange = rawXMax - rawXMin; // total range the finger has to move 
 	let rawYRange = rawYMax - rawYMin;
 	
@@ -199,7 +219,7 @@ function TransformCoordinates(x,y){
 	let canvasX = xRatio * width;
 	let canvasY = yRatio * height;
 	return [canvasX,canvasY]
-}
+}*/
 
 
 
