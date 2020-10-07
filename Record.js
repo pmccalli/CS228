@@ -1,6 +1,6 @@
 nj.config.printThreshold = 1000;
 var controllerOptions = {};
-var numSamples = 2;
+var numSamples = 99;
 var framesOfData = nj.zeros([5,4,6, numSamples]);
 var framesOfDatatemp = nj.zeros([5,4,6, numSamples]);
 var currentSample = 0;
@@ -46,7 +46,7 @@ x = 0;
 y = 0;
 z = 0;
 function HandleFrame(frame){
-	console.log(frame.hands);
+	//console.log(frame.hands);
 	if(frame.hands.length > 0){
 		hand = frame.hands[0];
 		var interactionBox = frame.interactionBox;
@@ -150,6 +150,13 @@ function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 	//console.log(boneStartX);
 	//console.log(normalizedNextJoint, normalizedPrevJoint);
 	//console.log(bone['prevJoint'])
+	//console.log(boneStartX);
+	//console.log(boneEndX);
+	//console.log(boneStartY);
+	//console.log(boneEndY);
+	//console.log(boneStartZ);
+	//console.log(boneEndZ);
+	
 	temp = boneEndX + boneStartX + boneEndY + boneStartY + boneEndZ + boneStartZ;
 	framesOfData.set(fingerIndex, boneIndex, 0, currentSample, boneStartX);
 	framesOfData.set(fingerIndex, boneIndex, 1, currentSample, boneStartY);
@@ -192,6 +199,7 @@ function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 }	
 function RecordData(){
 	if(currentNumHands == 2){
+		console.log(currentSample);
 		currentSample = currentSample + 1;
 		if(currentSample == numSamples){
 			currentSample = 0;
@@ -201,16 +209,14 @@ function RecordData(){
 		background(0);
 		
 		console.log('***');
-		for(i = 0; i <= 99; i++){
-			if(framesOfDatatemp){
-				framesOfData = framesOfData.concatenate(framesOfData,framesOfDatatemp);
-			}
-			framesOfDatatemp = framesOfData;
-		}
-	}	console.log(framesOfData);
+		console.log(framesOfData.toString());
+		//console.log( framesOfData.pick(null,null,null,0).toString() );
+		
+	}	
 }
 //my second 3d tensor has a lot of zeros, i don't know how to make a loop that records 100 frames of data.
-	
+//second 3d tensor fills when numSamples is odd
+//TA says post incorrect work in blackboard, ask Professor Bongard for extension
 	
 	
 

@@ -29,13 +29,16 @@ function Train(){
 		//console.log(testinteger);
 		
 		features = train0.pick(null,null,null,i);
+		features1 = train1.pick(null,null,null,i);
 		//console.log(testinteger);
 		
 		features = features.reshape(1,120);
+		features1 = features1.reshape(1,120);
 		//console.log(testinteger);
 		
 		//console.log(features.toString());
 		knnClassifier.addExample(features.tolist(), 0);
+		knnClassifier.addExample(features1.tolist(), 1);
 		testinteger += 1;
 		console.log(testinteger);
 		
