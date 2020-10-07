@@ -2,6 +2,7 @@ nj.config.printThreshold = 1000;
 var controllerOptions = {};
 var numSamples = 2;
 var framesOfData = nj.zeros([5,4,6, numSamples]);
+var framesOfDatatemp = nj.zeros([5,4,6, numSamples]);
 var currentSample = 0;
 id="displayArea";
  width="200";
@@ -198,13 +199,21 @@ function RecordData(){
 	} 
 	if(previousNumHands == 2 && currentNumHands == 1){
 		background(0);
+		
 		console.log('***');
-		console.log(framesOfData.toString());
-	}
-	
-	
-	
+		for(i = 0; i <= 99; i++){
+			if(framesOfDatatemp){
+				framesOfData = framesOfData.concatenate(framesOfData,framesOfDatatemp);
+			}
+			framesOfDatatemp = framesOfData;
+		}
+	}	console.log(framesOfData);
 }
+//my second 3d tensor has a lot of zeros, i don't know how to make a loop that records 100 frames of data.
+	
+	
+	
+
 /*function TransformCoordinates(x,y){
 	let rawXRange = rawXMax - rawXMin; // total range the finger has to move 
 	let rawYRange = rawYMax - rawYMin;

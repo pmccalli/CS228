@@ -50,14 +50,14 @@ function Test(){
 		features = test.pick(null,null,null,i);
 		featurest = features.reshape(1,120);
 		//console.log(featurest.toString());
-		console.log(featurest.tolist());
-		predictedSign = knnClassifier.classify(featurest.tolist(),GotResults());
-		console.log(predictedSign.toString())
+		//console.log(featurest.tolist());
+		predictedSign = knnClassifier.classify(featurest.tolist(),GotResults);
+		//console.log(predictedSign.toString())
 	}
 }
 function GotResults(err, result){
-	
-		console.log(typeof(result));
+		//console.log(err);
+		//console.log(typeof(result));
 		console.log(parseInt(result.label));
 		//console.log(result);
 		predictedClassLabels.set(testingSampleIndex, 0, parseInt(result.label));
@@ -66,7 +66,7 @@ function GotResults(err, result){
 		if(testingSampleIndex >= 150){
 			testingSampleIndex = 1;
 		}
-		console.log(testingSampleIndex);
+		//console.log(testingSampleIndex);
 		//console.log(testingSampleIndex, parseInt(result.label));
 	
 	
