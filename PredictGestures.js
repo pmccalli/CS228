@@ -52,7 +52,7 @@ function Train(){
 function Test(){
 	for(i = 0; i < 2; i++){
 		//console.log( test.pick(null,null,null,i).toString());
-		features = test.pick(null,null,null,i);
+		features = train0.pick(null,null,null,i);
 		featurest = features.reshape(1,120);
 		//console.log(featurest.toString());
 		//console.log(featurest.tolist());

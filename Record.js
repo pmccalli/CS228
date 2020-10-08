@@ -81,9 +81,9 @@ function HandleFinger(finger, fingerIndex, interactionBox){
 		}
 		
 		HandleBone(bone, fingerIndex, boneIndex, interactionBox)
-		
-			
 		RecordData()
+			
+		
 		
 	}
 
