@@ -1,8 +1,8 @@
 nj.config.printThreshold = 1000;
 var controllerOptions = {};
-var numSamples = 99;
+var numSamples = 2;
 var framesOfData = nj.zeros([5,4,6, numSamples]);
-var framesOfDatatemp = nj.zeros([5,4,6, numSamples]);
+//var framesOfDatatemp = nj.zeros([5,4,6, numSamples]);
 var currentSample = 0;
 id="displayArea";
  width="200";
@@ -13,10 +13,10 @@ console.log(document.getElementById("displayArea")); //this returns null somethi
 
 
 
-var controller = new Leap.Controller();
+/*var controller = new Leap.Controller();
 controller.on("frame", function(frame){
-    if(frame.pointables.length > 0)
-    {
+    //if(frame.pointables.length > 0)
+    //{
         //canvasElement.width = window.innerWidth; //clear
         
         //Get a pointable and normalize the tip position
@@ -26,13 +26,13 @@ controller.on("frame", function(frame){
         
         // Convert the normalized coordinates to span the canvas
         var canvasX = window.innerWidth * normalizedPosition[0];
-        var canvasY = window.innerHeight * (1 - normalizedPosition[1]);
+		var canvasY = window.innerHeight * (1 - normalizedPosition[1]);
         //we can ignore z for a 2D context
         
-        displayArea.strokeText("(" + canvasX.toFixed(1) + ", " + canvasY.toFixed(1) + ")", canvasX, canvasY);
-    }
+       // displayArea.strokeText("(" + canvasX.toFixed(1) + ", " + canvasY.toFixed(1) + ")", canvasX, canvasY);
+    //}
 });
-controller.connect();
+controller.connect();*/
 
 
 rawXMin = 99;
@@ -79,58 +79,15 @@ function HandleFinger(finger, fingerIndex, interactionBox){
 		else{
 			stroke(255 - (i*40),0,0);
 		}
-		
+		//console.log(fingerIndex, boneIndex, currentSample);
 		HandleBone(bone, fingerIndex, boneIndex, interactionBox)
-		RecordData()
+		
 			
 		
 		
 	}
-
-	//console.log(finger);
 	
 	
-	//console.log(index);
-	tip = finger['tipPosition'];
-	//console.log(tip);
-	x = tip[0];
-	y = tip[1];
-	z = tip[2];
-	
-	// rawXMin scales to canvas 0
-	// rawXMax scales to canvas width
-	// rawYMin scales to canvas 0
-	// rawYMax scales to canvas height
-	
-	let rawXRange = rawXMax - rawXMin; // total range the finger has to move 
-	let rawYRange = rawYMax - rawYMin;
-	
-	let xShift = x - rawXMin; // how far x is away from the min of x
-	let yShift = y - rawYMin;
-	
-	let xRatio = xShift/rawXRange;
-	let yRatio = yShift/rawYRange;
-	//console.log(xRatio, yRatio);
-	
-	let canvasX = xRatio * width;
-	let canvasY = yRatio * height;
-	
-	//circle(canvasX, canvasY, 50);
-
-	
-	if(rawXMin > x){
-		rawXMin = x;
-	}
-	if(rawYMin < y){
-		rawYMin = y;
-	}
-	if(rawXMax < x){
-		rawXMax = x;
-	}
-	if(rawYMax > y){
-		rawYMax = y;
-	}
-	//console.log(rawXMin, rawYMin, rawXMax, rawYMax)
 	
 }
 function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
@@ -157,7 +114,7 @@ function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 	//console.log(boneStartZ);
 	//console.log(boneEndZ);
 	
-	temp = boneEndX + boneStartX + boneEndY + boneStartY + boneEndZ + boneStartZ;
+	//temp = boneEndX + boneStartX + boneEndY + boneStartY + boneEndZ + boneStartZ;
 	framesOfData.set(fingerIndex, boneIndex, 0, currentSample, boneStartX);
 	framesOfData.set(fingerIndex, boneIndex, 1, currentSample, boneStartY);
 	framesOfData.set(fingerIndex, boneIndex, 2, currentSample, boneStartZ);
@@ -199,7 +156,7 @@ function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 }	
 function RecordData(){
 	if(currentNumHands == 2){
-		console.log(currentSample);
+		//console.log(currentSample);
 		currentSample = currentSample + 1;
 		if(currentSample == numSamples){
 			currentSample = 0;
@@ -208,9 +165,9 @@ function RecordData(){
 	if(previousNumHands == 2 && currentNumHands == 1){
 		background(0);
 		
-		console.log('***');
-		console.log(framesOfData.toString());
-		//console.log( framesOfData.pick(null,null,null,0).toString() );
+		//console.log('***');
+		//console.log(framesOfData.toString());
+		console.log( framesOfData.pick(null,null,null,1).toString() );
 		
 	}	
 }
@@ -243,6 +200,7 @@ Leap.loop(controllerOptions, function(frame) {
 	clear();
 	currentNumHands = frame.hands.length;
 	HandleFrame(frame);
+	RecordData()
 	previousNumHands = currentNumHands;
 	
 	
