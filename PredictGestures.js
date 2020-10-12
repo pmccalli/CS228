@@ -6,13 +6,12 @@ let n= 0;
 //let numSamples = nj.zeros([150,1]);
 const knnClassifier = ml5.KNNClassifier();
 let m = 0;
-let d = 8;
+let d = 1;
 let c = 0;
 
 
 let numFeatures = nj.zeros(150, 4);
 
-//console.log(irisData.pick(4));
 
 var numSamples = 100;
 var framesOfData = nj.zeros([5,4,6]);
@@ -39,20 +38,18 @@ i = 0;
 x = 0;
 y = 0;
 z = 0;
+
+Leap.loop( controllerOptions, function(frame){
+	clear();
+	if(trainingCompleted == false){
+		Train();
+		trainingCompleted = true;
+	}
+	currentNumHands = frame.hands.length;
+	HandleFrame(frame);
 	
-Leap.loop(controllerOptions, function(frame){
-	//console.log("Draw");
-	//console.log(train0.shape[3]);
-	Leap.loop( controllerOptions, function(frame){clear();
-		if(trainingCompleted == false){
-			Train();
-			trainingCompleted = true;
-		}
-		currentNumHands = frame.hands.length;
-		HandleFrame(frame);
-		} );
-		previousNumHands = currentNumHands;
-			
+	previousNumHands = currentNumHands;
+} );	
 
 		
 
@@ -64,17 +61,20 @@ function Train(){
 		//console.log(testinteger);
 		
 		features = train8.pick(null,null,null,i);
-		features1 = train0.pick(null,null,null,i);
+		features0 = train0.pick(null,null,null,i);
+		features1 = train1Riofrio.pick(null,null,null,i);
 		//console.log(testinteger);
 		
 		features = features.reshape(1,120);
 		knnClassifier.addExample(features.tolist(), 8);
-		features1 = features1.reshape(1,120);
+		features0 = features0.reshape(1,120);
+		//features1 = features1.reshape(1,120)
 		
 		//console.log(testinteger);
 		
 		//console.log(features.toString());
-		knnClassifier.addExample(features1.tolist(), 0);
+		knnClassifier.addExample(features0.tolist(), 0);
+		//knnClassifier.addExample(features1.tolist(), 1);
 		
 		
 		
@@ -88,35 +88,103 @@ function Train(){
 	
 }
 function Test(){
-	for(i = 0; i < 2; i++){
+	
 		
-		//features = test.pick(null,null,null,i);
-		featurest = framesOfData.reshape(1,120);
+	CleanData();
+	CleanDataZ();
+	features = framesOfData.reshape(1,120);
+
+	predictedSign = knnClassifier.classify(features.tolist(),GotResults);
 		
-		predictedSign = knnClassifier.classify(featurest.tolist(),GotResults);
-		
-	}
+	
 }
+function CleanData(){
+	xValues = framesOfData.slice([],[],[0,6,3]);
+	yValues = framesOfData.slice([],[],[1,6,3]);
+	currentYMean = yValues.mean();
+	currentMean = xValues.mean();
+
+	horizontalShift = 0.5 - currentMean;
+
+	verticalShift = 0.5 - currentYMean;
+	for(i = 0; i < 5; i++){
+		
+		for(j = 0; j < 4; j++){
+		
+			currentColumn = j;
+			currentRow= i;
+			currentX = framesOfData.get(currentRow,currentColumn,0);
+			shiftedX = currentX + horizontalShift;
+			framesOfData.set(currentRow,currentColumn,0, shiftedX);
+			currentX = framesOfData.get(currentRow,currentColumn,3);
+			shiftedX = currentX + horizontalShift;
+			framesOfData.set(currentRow,currentColumn,3, shiftedX);
+			
+			
+			currentY = framesOfData.get(currentRow,currentColumn,1);
+			shiftedY = currentY + verticalShift;
+			framesOfData.set(currentRow,currentColumn,1, shiftedY);
+			currentY = framesOfData.get(currentRow,currentColumn,4);
+			shiftedY = currentY + verticalShift;
+			framesOfData.set(currentRow,currentColumn,4, shiftedY);
+		}
+	}
+	xValues = framesOfData.slice([],[],[0,6,3]);
+	
+
+	yValues = framesOfData.slice([],[],[1,6,3]);
+	currentYMean = yValues.mean();
+
+	
+	
+}
+function CleanDataZ(){
+
+	zValues = framesOfData.slice([],[],[2,6,3]);
+	currentZMean = zValues.mean();
+	zShift = 0.5 - currentZMean;
+	for(i = 0; i < 5; i++){
+	
+		for(j = 0; j < 4; j++){
+			
+			currentColumn = j;
+			currentRow= i;
+			
+			
+			currentZ = framesOfData.get(currentRow,currentColumn,2);
+			shiftedZ = currentZ + zShift;
+			framesOfData.set(currentRow,currentColumn,2, shiftedZ);
+			currentZ = framesOfData.get(currentRow,currentColumn,5);
+			shiftedZ = currentZ + zShift;
+			framesOfData.set(currentRow,currentColumn,5, shiftedZ);
+		}
+	}
+	zValues = framesOfData.slice([],[],[2,6,3]);
+	currentZMean = zValues.mean();
+	
+	
+}
+//having trouble iterating over rows and columns
+//do i use slice?
+//pick was removed from num js wiki, is it no longer viable?
 function GotResults(err, result){
 	if(result){
-		console.log(parseInt(result.label));
+		
 		c = parseInt(result.label);
 		n += 1;
 		m = (((n - 1)* m + (parseInt(result.label) == d))/ n); 
 		//console.log(err);
-		consle.log(n,m,c);
+		console.log(n,m,c);
+		//console.log(parseInt(result.label));
 	}
 	else{
-		console.log('no REsult');
+		//console.log('no REsult');
 	}		
 		//console.log(predictedClassLabels.toString());
 	
 	
 }
-// upon adding leap loop code, html when run slowed considerably.
-// upon checking average, html refused to print average, and after a short while
-// black screened the broswer window, and then said too many errors had been reported.
-//wondering if something went wrong with leap console
+
 function HandleFrame(frame){
 	
 	if(frame.hands.length > 0){
@@ -178,7 +246,7 @@ function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 }
 
 
-});
+
 
 
 
