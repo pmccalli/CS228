@@ -1,6 +1,6 @@
 let trainingCompleted = false;
 var controllerOptions = {};
-let predictedClassLabels = nj.zeros([150,1]);
+//let predictedClassLabels = nj.zeros([150,1]);
 let testinteger = 0;
 let n= 0;
 //let numSamples = nj.zeros([150,1]);
@@ -10,10 +10,10 @@ let d = 1;
 let c = 0;
 
 
-let numFeatures = nj.zeros(150, 4);
+//let numFeatures = nj.zeros(150, 4);
 
 
-var numSamples = 100;
+var numSamples = 99;
 var framesOfData = nj.zeros([5,4,6]);
 var currentSample = 0;
 id="displayArea";
@@ -21,12 +21,12 @@ id="displayArea";
  height="100";
  style="background:#dddddd;";
 
-console.log(document.getElementById("displayArea")); //this returns null something went wrong
+//console.log(document.getElementById("displayArea")); //this returns null something went wrong
 
 
 
 
-
+console.log(train1Bongard.toString());
 
 rawXMin = 99;
 rawYMin = 99;
@@ -41,13 +41,13 @@ z = 0;
 
 Leap.loop( controllerOptions, function(frame){
 	clear();
+	console.log(train1Bongard.toString());
 	if(trainingCompleted == false){
 		Train();
 		trainingCompleted = true;
 	}
 	currentNumHands = frame.hands.length;
 	HandleFrame(frame);
-	
 	previousNumHands = currentNumHands;
 } );	
 
@@ -59,22 +59,23 @@ function Train(){
 	for(i = 0; i < 2; i++){
 		//console.log( train0.pick(null,null,null,i).toString());
 		//console.log(testinteger);
-		
+		console.log('hell0');
+		console.log(train1Bongard.toString());
 		features = train8.pick(null,null,null,i);
 		features0 = train0.pick(null,null,null,i);
-		features1 = train1Riofrio.pick(null,null,null,i);
+		features1 = train1Bongard.pick(null,null,null,i);
 		//console.log(testinteger);
 		
 		features = features.reshape(1,120);
 		knnClassifier.addExample(features.tolist(), 8);
 		features0 = features0.reshape(1,120);
-		//features1 = features1.reshape(1,120)
+		features1 = features1.reshape(1,120)
 		
 		//console.log(testinteger);
 		
 		//console.log(features.toString());
 		knnClassifier.addExample(features0.tolist(), 0);
-		//knnClassifier.addExample(features1.tolist(), 1);
+		knnClassifier.addExample(features1.tolist(), 1);
 		
 		
 		
