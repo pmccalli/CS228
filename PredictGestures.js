@@ -6,7 +6,7 @@ let n= 0;
 //let numSamples = nj.zeros([150,1]);
 const knnClassifier = ml5.KNNClassifier();
 let m = 0;
-let d = 1;
+let d = 3;
 let c = 0;
 
 
@@ -26,7 +26,7 @@ id="displayArea";
 
 
 
-console.log(train1Bongard.toString());
+
 
 rawXMin = 99;
 rawYMin = 99;
@@ -41,7 +41,6 @@ z = 0;
 
 Leap.loop( controllerOptions, function(frame){
 	clear();
-	console.log(train1Bongard.toString());
 	if(trainingCompleted == false){
 		Train();
 		trainingCompleted = true;
@@ -57,36 +56,46 @@ Leap.loop( controllerOptions, function(frame){
 
 function Train(){
 	for(i = 0; i < 2; i++){
-		//console.log( train0.pick(null,null,null,i).toString());
-		//console.log(testinteger);
-		console.log('hell0');
-		console.log(train1Bongard.toString());
-		features = train8.pick(null,null,null,i);
+		features1 = train1.pick(null,null,null,i);
+		features2 = train2.pick(null,null,null,i);
+		features3 = train3.pick(null,null,null,i);
+		
+		features4 = train4.pick(null,null,null,i);
+		features4OBrien = train4OBrien.pick(null,null,null, i);
+		features5 = train5.pick(null,null,null,i);
+		features6 = train6.pick(null,null,null,i);
+		
+		features7 = train7.pick(null,null,null,i);
+		features8 = train8.pick(null,null,null,i);
+		features9 = train9.pick(null,null,null,i);
 		features0 = train0.pick(null,null,null,i);
-		features1 = train1Bongard.pick(null,null,null,i);
-		//console.log(testinteger);
-		
-		features = features.reshape(1,120);
-		knnClassifier.addExample(features.tolist(), 8);
+		features1 = features1.reshape(1,120);
+		features2 = features2.reshape(1,120);
+		features3 = features3.reshape(1,120);
+		features4 = features4.reshape(1,120);
+		features4OBrien = features4OBrien.reshape(1,120);
+		features5 = features5.reshape(1,120);
+		features6 = features6.reshape(1,120);
+		features7 = features7.reshape(1,120);
+		features8 = features8.reshape(1,120);
+		features9 = features9.reshape(1,120);
 		features0 = features0.reshape(1,120);
-		features1 = features1.reshape(1,120)
-		
-		//console.log(testinteger);
-		
-		//console.log(features.toString());
-		knnClassifier.addExample(features0.tolist(), 0);
+
 		knnClassifier.addExample(features1.tolist(), 1);
-		
-		
-		
+		knnClassifier.addExample(features2.tolist(), 2);
+		knnClassifier.addExample(features3.tolist(), 3);
+		knnClassifier.addExample(features4.tolist(), 4);
+		knnClassifier.addExample(features4OBrien.tolist(), 4);
+		knnClassifier.addExample(features5.tolist(), 5);
+		knnClassifier.addExample(features6.tolist(), 6);
+		knnClassifier.addExample(features7.tolist(), 7);
+		knnClassifier.addExample(features8.tolist(), 8);
+		knnClassifier.addExample(features9.tolist(), 9);
+		knnClassifier.addExample(features0.tolist(), 0);
 		
 		testinteger += 1;
-		console.log(testinteger);
-		
+		//console.log(testinteger);
 	}
-	
-	
-	
 }
 function Test(){
 	
@@ -175,7 +184,7 @@ function GotResults(err, result){
 		n += 1;
 		m = (((n - 1)* m + (parseInt(result.label) == d))/ n); 
 		//console.log(err);
-		console.log(n,m,c);
+		console.log(c);
 		//console.log(parseInt(result.label));
 	}
 	else{
