@@ -57,41 +57,66 @@ Leap.loop( controllerOptions, function(frame){
 function Train(){
 	for(i = 0; i < 2; i++){
 		features1 = train1.pick(null,null,null,i);
+		features1M = train1McCallion.pick(null,null,null,i);
+		features1D = train1Davis.pick(null,null,null,i);
+		features1J = train1Jimmo.pick(null,null,null,i);
+		features1L = train1Li.pick(null,null,null,i);
 		features2 = train2.pick(null,null,null,i);
+		features2R = train2Reilly.pick(null,null,null,i);
 		features3 = train3.pick(null,null,null,i);
 		
 		features4 = train4.pick(null,null,null,i);
-		features4OBrien = train4OBrien.pick(null,null,null, i);
+		//features4OBrien = train4OBrien.pick(null,null,null, i);
 		features5 = train5.pick(null,null,null,i);
 		features6 = train6.pick(null,null,null,i);
 		
 		features7 = train7.pick(null,null,null,i);
 		features8 = train8.pick(null,null,null,i);
 		features9 = train9.pick(null,null,null,i);
+		features9M = train9McCallion.pick(null,null,null,i);
+		features9B = train9Bongard.pick(null,null,null,i);
+		
 		features0 = train0.pick(null,null,null,i);
+		features0B = train0Bongard.pick(null,null,null,i);
 		features1 = features1.reshape(1,120);
+		features1M = features1M.reshape(1,120);
+		features1D = features1D.reshape(1,120);
+		features1J = features1J.reshape(1,120);
+		features1L = features1L.reshape(1,120);
 		features2 = features2.reshape(1,120);
+		features2R = features2R.reshape(1,120);
 		features3 = features3.reshape(1,120);
 		features4 = features4.reshape(1,120);
-		features4OBrien = features4OBrien.reshape(1,120);
+		//features4OBrien = features4OBrien.reshape(1,120);
 		features5 = features5.reshape(1,120);
 		features6 = features6.reshape(1,120);
 		features7 = features7.reshape(1,120);
 		features8 = features8.reshape(1,120);
 		features9 = features9.reshape(1,120);
+		features9M = features9M.reshape(1,120);
+		features9B = features9B.reshape(1,120);
 		features0 = features0.reshape(1,120);
+		features0B = features0B.reshape(1,120);
 
 		knnClassifier.addExample(features1.tolist(), 1);
+		knnClassifier.addExample(features1M.tolist(), 1);
+		knnClassifier.addExample(features1D.tolist(), 1);
+		knnClassifier.addExample(features1J.tolist(), 1);
+		knnClassifier.addExample(features1L.tolist(), 1);
 		knnClassifier.addExample(features2.tolist(), 2);
+		knnClassifier.addExample(features2R.tolist(), 2);
 		knnClassifier.addExample(features3.tolist(), 3);
 		knnClassifier.addExample(features4.tolist(), 4);
-		knnClassifier.addExample(features4OBrien.tolist(), 4);
+		//knnClassifier.addExample(features4OBrien.tolist(), 4);
 		knnClassifier.addExample(features5.tolist(), 5);
 		knnClassifier.addExample(features6.tolist(), 6);
 		knnClassifier.addExample(features7.tolist(), 7);
 		knnClassifier.addExample(features8.tolist(), 8);
 		knnClassifier.addExample(features9.tolist(), 9);
+		knnClassifier.addExample(features9M.tolist(), 9);
+		knnClassifier.addExample(features9B.tolist(), 9);
 		knnClassifier.addExample(features0.tolist(), 0);
+		knnClassifier.addExample(features0B.tolist(), 0);
 		
 		testinteger += 1;
 		//console.log(testinteger);
