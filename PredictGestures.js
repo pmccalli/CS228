@@ -62,12 +62,15 @@ function Train(){
 		features1J = train1Jimmo.pick(null,null,null,i);
 		features1L = train1Li.pick(null,null,null,i);
 		features2 = train2.pick(null,null,null,i);
-		features2R = train2Reilly.pick(null,null,null,i);
+		features2R = train2Rielly.pick(null,null,null,i);
 		features3 = train3.pick(null,null,null,i);
+		features3M = train3McCallion.pick(null,null,null,i);
 		
 		features4 = train4.pick(null,null,null,i);
+		features4M = train4McCallion.pick(null,null,null,i);
 		//features4OBrien = train4OBrien.pick(null,null,null, i);
 		features5 = train5.pick(null,null,null,i);
+		//features5M = train5McCallion.pick(null,null,null,i);
 		features6 = train6.pick(null,null,null,i);
 		
 		features7 = train7.pick(null,null,null,i);
@@ -86,9 +89,12 @@ function Train(){
 		features2 = features2.reshape(1,120);
 		features2R = features2R.reshape(1,120);
 		features3 = features3.reshape(1,120);
+		features3M = features3M.reshape(1,120);
 		features4 = features4.reshape(1,120);
+		features4M = features4M.reshape(1,120);
 		//features4OBrien = features4OBrien.reshape(1,120);
 		features5 = features5.reshape(1,120);
+		//features5M = features5M.reshape(1,120);
 		features6 = features6.reshape(1,120);
 		features7 = features7.reshape(1,120);
 		features8 = features8.reshape(1,120);
@@ -106,9 +112,12 @@ function Train(){
 		knnClassifier.addExample(features2.tolist(), 2);
 		knnClassifier.addExample(features2R.tolist(), 2);
 		knnClassifier.addExample(features3.tolist(), 3);
+		knnClassifier.addExample(features3M.tolist(), 3);
 		knnClassifier.addExample(features4.tolist(), 4);
+		knnClassifier.addExample(features4M.tolist(), 4);
 		//knnClassifier.addExample(features4OBrien.tolist(), 4);
 		knnClassifier.addExample(features5.tolist(), 5);
+		//knnClassifier.addExample(features5M.tolist(), 5);
 		knnClassifier.addExample(features6.tolist(), 6);
 		knnClassifier.addExample(features7.tolist(), 7);
 		knnClassifier.addExample(features8.tolist(), 8);
