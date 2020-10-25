@@ -8,7 +8,7 @@ const knnClassifier = ml5.KNNClassifier();
 let m = 0;
 let d = 3;
 let c = 0;
-
+var programstate = 0;
 
 //let numFeatures = nj.zeros(150, 4);
 
@@ -40,24 +40,61 @@ y = 0;
 z = 0;
 
 Leap.loop( controllerOptions, function(frame){
-	clear();
+	 clear();
+ DetermineState(frame);
+if (programstate==0) {
+	HandleState0(frame);
+ }
+ else if (programstate==1) {
+	HandleState1(frame);
+ }
+	
+	
+	currentNumHands = frame.hands.length;
+	
+	previousNumHands = currentNumHands;
+} );	
+function DetermineState(frame){
+	if(frame.hands.length > 0){
+		programstate = 1;
+	}
+	else if (frame.hands.length <=0){
+		programstate = 0;
+	}
+}		
+function HandleState0(frame) {
+ TrainKNNIfNotDoneYet()
+ DrawImageToHelpUserPutTheirHandOverTheDevice()
+ }
+function HandleState1(frame){
+	HandleFrame(frame);
+	Test();
+}
+ 
+function TrainKNNIfNotDoneYet(){
 	if(trainingCompleted == false){
 		Train();
 		trainingCompleted = true;
 	}
-	currentNumHands = frame.hands.length;
-	HandleFrame(frame);
-	previousNumHands = currentNumHands;
-} );	
-
-		
-
-
+}
+function DrawImageToHelpUserPutTheirHandOverTheDevice(){
+	image(img, 0, 0,)
+}
 
 function Train(){
 	for(i = 0; i < 2; i++){
-		features1 = train1.pick(null,null,null,i);
+		/*features1 = train1.pick(null,null,null,i);
+		features1Wolley = train1Wolley.pick(null,null,null,i);
+		features1Riofrio = train1Riofrio.pick(null,null,null,i);
+		//features1Hunt = train1Hunt.pick(null,null,null,i);
 		features1M = train1McCallion.pick(null,null,null,i);
+		features1Rice = train1Rice.pick(null,null,null,i);
+		features1M3 = train1McCallion3.pick(null,null,null,i);
+		features1M4 = train1McCallion4.pick(null,null,null,i);
+		features1M5 = train1McCallion5.pick(null,null,null,i);
+		features1M6 = train1McCallion6.pick(null,null,null,i);
+		features1Ms = train1McCallions.pick(null,null,null,i);
+		features1Mc = train1McLaughlin.pick(null,null,null,i);
 		features1D = train1Davis.pick(null,null,null,i);
 		features1J = train1Jimmo.pick(null,null,null,i);
 		features1L = train1Li.pick(null,null,null,i);
@@ -75,6 +112,8 @@ function Train(){
 		
 		features7 = train7.pick(null,null,null,i);
 		features8 = train8.pick(null,null,null,i);
+		features8M2 = train8McCallion2.pick(null,null,null,i);
+		features8M3 = train8McCallion3.pick(null,null,null,i);
 		features9 = train9.pick(null,null,null,i);
 		features9M = train9McCallion.pick(null,null,null,i);
 		features9B = train9Bongard.pick(null,null,null,i);
@@ -82,7 +121,17 @@ function Train(){
 		features0 = train0.pick(null,null,null,i);
 		features0B = train0Bongard.pick(null,null,null,i);
 		features1 = features1.reshape(1,120);
+		features1Wolley = features1Wolley.reshape(1,120);
+		features1Riofrio = features1Riofrio.reshape(1,120);
+		//features1Hunt = features1Hunt.reshape(1,120);
+		features1Rice = features1Rice.reshape(1,120);
 		features1M = features1M.reshape(1,120);
+		features1M3 = features1M3.reshape(1,120);
+		features1M4 = features1M4.reshape(1,120);
+		features1M5 = features1M5.reshape(1,120);
+		features1M6 = features1M6.reshape(1,120);
+		features1Ms = features1Ms.reshape(1,120);
+		features1Mc = features1Mc.reshape(1,120);
 		features1D = features1D.reshape(1,120);
 		features1J = features1J.reshape(1,120);
 		features1L = features1L.reshape(1,120);
@@ -98,6 +147,8 @@ function Train(){
 		features6 = features6.reshape(1,120);
 		features7 = features7.reshape(1,120);
 		features8 = features8.reshape(1,120);
+		features8M2 = features8M2.reshape(1,120);
+		features8M3 = features8M3.reshape(1,120);
 		features9 = features9.reshape(1,120);
 		features9M = features9M.reshape(1,120);
 		features9B = features9B.reshape(1,120);
@@ -105,7 +156,17 @@ function Train(){
 		features0B = features0B.reshape(1,120);
 
 		knnClassifier.addExample(features1.tolist(), 1);
+		knnClassifier.addExample(features1Wolley.tolist(), 1);
+		knnClassifier.addExample(features1Riofrio.tolist(), 1);
+		//knnClassifier.addExample(features1Hunt.tolist(), 1);
+		knnClassifier.addExample(features1Rice.tolist(), 1);
 		knnClassifier.addExample(features1M.tolist(), 1);
+		knnClassifier.addExample(features1M3.tolist(), 1);
+		knnClassifier.addExample(features1M4.tolist(), 1);
+		knnClassifier.addExample(features1M5.tolist(), 1);
+		knnClassifier.addExample(features1M6.tolist(), 1);
+		knnClassifier.addExample(features1Ms.tolist(), 1);
+		knnClassifier.addExample(features1Mc.tolist(), 1);
 		knnClassifier.addExample(features1D.tolist(), 1);
 		knnClassifier.addExample(features1J.tolist(), 1);
 		knnClassifier.addExample(features1L.tolist(), 1);
@@ -121,26 +182,28 @@ function Train(){
 		knnClassifier.addExample(features6.tolist(), 6);
 		knnClassifier.addExample(features7.tolist(), 7);
 		knnClassifier.addExample(features8.tolist(), 8);
+		knnClassifier.addExample(features8M2.tolist(), 8);
+		knnClassifier.addExample(features8M3.tolist(), 8);
 		knnClassifier.addExample(features9.tolist(), 9);
 		knnClassifier.addExample(features9M.tolist(), 9);
 		knnClassifier.addExample(features9B.tolist(), 9);
 		knnClassifier.addExample(features0.tolist(), 0);
 		knnClassifier.addExample(features0B.tolist(), 0);
-		
+		*/
 		testinteger += 1;
 		//console.log(testinteger);
 	}
 }
 function Test(){
 	
-		
+		/*
 	CleanData();
 	CleanDataZ();
 	features = framesOfData.reshape(1,120);
 
 	predictedSign = knnClassifier.classify(features.tolist(),GotResults);
 		
-	
+	*/
 }
 function CleanData(){
 	xValues = framesOfData.slice([],[],[0,6,3]);
@@ -235,7 +298,7 @@ function HandleFrame(frame){
 		hand = frame.hands[0];
 		var interactionBox = frame.interactionBox;
 		HandleHand(hand, interactionBox);
-		Test();
+		
 		//console.log(framesOfData.toString());
 	}
 	else {
@@ -286,7 +349,7 @@ function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 	framesOfData.set(fingerIndex, boneIndex, 4, boneEndY);
 	framesOfData.set(fingerIndex, boneIndex, 5, boneEndZ);
 	
-	line(normalizedPrevJoint[0] * window.innerWidth, (1 - normalizedPrevJoint[1])* window.innerHeight, normalizedNextJoint[0]*window.innerWidth, (1 - normalizedNextJoint[1])*window.innerHeight);
+	line(normalizedPrevJoint[0] * window.innerWidth/2, (1 - normalizedPrevJoint[1])* window.innerHeight/2, normalizedNextJoint[0]*window.innerWidth/2, (1 - normalizedNextJoint[1])*window.innerHeight/2);
 }
 
 
