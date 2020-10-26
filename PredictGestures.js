@@ -53,22 +53,70 @@ if (programstate==0) {
 	currentNumHands = frame.hands.length;
 	
 	previousNumHands = currentNumHands;
-} );	
+} );
+	
 function DetermineState(frame){
 	if(frame.hands.length > 0){
-		programstate = 1;
+		if(hand is off center){
+			programstate = 1;
+			//the users hand is off center
+		}
+		programstate = 2;// the users hand is present and centered
 	}
 	else if (frame.hands.length <=0){
-		programstate = 0;
+		programstate = 0;//the program is waiting to see the users hand
 	}
-}		
+}	
+	
+function HandIsUncentered(){
+	if(HandIsTooFarToTheLeft() && HandIsTooFarToTheRight()){
+		return true;
+	}
+}
+
+function HandIsTooFarToTheLeft(){
+	xValues = framesOfData.slice([],[],[0,6,3]);
+	currentMean = xValues.mean();
+	if(currentMean < .25){
+		return true;
+	}
+	
+}
+
+function HandIsTooFarToTheRight(){
+	yValues = framesOfData.slice([],[],[1,6,3]);
+	currentYMean = yValues.mean();
+	if(currentMean < .25){
+		return true;
+	}
+}
+
 function HandleState0(frame) {
- TrainKNNIfNotDoneYet()
- DrawImageToHelpUserPutTheirHandOverTheDevice()
- }
+	TrainKNNIfNotDoneYet()
+	DrawImageToHelpUserPutTheirHandOverTheDevice()
+}
+
 function HandleState1(frame){
 	HandleFrame(frame);
-	Test();
+	//Test();
+	if ( HandIsTooFarToTheLeft() ) {
+           DrawArrowRight() 
+	}
+	if(HandIsTooFarToTheRight){
+		DrawArrowLeft()
+	}
+}
+
+function HandleState2(frame){
+		HandleFrame(frame);
+		//Test();
+}
+
+function DrawArrowLeft(){
+	image(tooright, 0,0);
+}
+function DrawArrowRight(){
+	image (tooleft, 0,0);
 }
  
 function TrainKNNIfNotDoneYet(){
@@ -78,7 +126,7 @@ function TrainKNNIfNotDoneYet(){
 	}
 }
 function DrawImageToHelpUserPutTheirHandOverTheDevice(){
-	image(img, 0, 0,)
+	image(img, 0, 0,);
 }
 
 function Train(){
