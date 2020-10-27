@@ -7,11 +7,11 @@ var tooleft;
 var tooright;
 function setup() {
 createCanvas(window.innerWidth,window.innerHeight);
-	img = loadImage('https://cors-anywhere.herokuapp.com/https://imgur.com/a/QUDJToM');
-	toohigh = loadImage('https://imgur.com/a/Fk9wXRB')
-	toolow = loadImage ('https://imgur.com/a/3PhSC75');
-	tooforward = loadImage('https://imgur.com/a/oiVcZg5');
-	toobackward = loadImage('https://imgur.com/a/ZvSjULj');
-	tooleft = loadImage('https://imgur.com/a/0vuetaw');
-	tooright = loadImage('https://imgur.com/a/c5fhVPJ');
+	img = loadImage('https://i.imgur.com/zz8Iq2k.jpg');
+	toohigh = loadImage('https://i.imgur.com/wpkBtbt.jpg')
+	toolow = loadImage ('https://i.imgur.com/WyQpLl7.jpg');
+	tooforward = loadImage('https://i.imgur.com/ZB5HA9L.jpg');
+	toobackward = loadImage('https://i.imgur.com/SdyeKck.jpg');
+	tooleft = loadImage('https://i.imgur.com/7pgqW1y.jpg');
+	tooright = loadImage('https://i.imgur.com/z3Impih.jpeg');
 }

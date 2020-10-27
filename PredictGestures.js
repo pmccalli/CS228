@@ -42,11 +42,16 @@ z = 0;
 Leap.loop( controllerOptions, function(frame){
 	 clear();
  DetermineState(frame);
+ //console.log(programstate);
 if (programstate==0) {
 	HandleState0(frame);
  }
  else if (programstate==1) {
+	 //console.log(programstate);
 	HandleState1(frame);
+ }
+ else if (programstate == 2){
+	 HandleState2(frame);
  }
 	
 	
@@ -56,40 +61,145 @@ if (programstate==0) {
 } );
 	
 function DetermineState(frame){
+	//console.log(frame.hands.length);
 	if(frame.hands.length > 0){
-		if(hand is off center){
+		if(HandIsUncentered()){
 			programstate = 1;
 			//the users hand is off center
 		}
-		programstate = 2;// the users hand is present and centered
+		else if(!HandIsUncentered()){
+			programstate = 2;// the users hand is present and centered
+		}
+		
 	}
-	else if (frame.hands.length <=0){
+	else if (frame.hands.length ==0){
 		programstate = 0;//the program is waiting to see the users hand
 	}
 }	
 	
 function HandIsUncentered(){
-	if(HandIsTooFarToTheLeft() && HandIsTooFarToTheRight()){
+	if(HandIsTooFarToTheLeft() || HandIsTooFarToTheRight()){
+		console.log('left right');
 		return true;
 	}
+	else if(HandIsTooFarBack() || HandIsTooFarForward()){
+		console.log('back and forth');
+		return true;
+	}
+	else if(HandIsTooHigh() || HandIsTooLow()){
+		console.log(' heigth');
+		return true;
+	}
+	return false;
 }
 
 function HandIsTooFarToTheLeft(){
 	xValues = framesOfData.slice([],[],[0,6,3]);
 	currentMean = xValues.mean();
-	if(currentMean < .25){
+	
+	
+	//console.log('Leftie test');
+	horizontalShift = 0.5 - currentMean;
+
+
+	xValues = framesOfData.slice([],[],[0,6,3]);
+	//console.log(xValues.toString());
+
+	yValues = framesOfData.slice([],[],[1,6,3]);
+	currentXMean = xValues.mean();
+	//console.log(currentXMean);
+	if(currentXMean < .25){
 		return true;
 	}
 	
 }
 
 function HandIsTooFarToTheRight(){
+	xValues = framesOfData.slice([],[],[0,6,3]);
+	currentMean = xValues.mean();
+	//console.log('rightie test');
+	horizontalShift = 0.5 - currentMean;
+
+
+	xValues = framesOfData.slice([],[],[0,6,3]);
+	
+
 	yValues = framesOfData.slice([],[],[1,6,3]);
-	currentYMean = yValues.mean();
-	if(currentMean < .25){
+	currentXMean = xValues.mean();
+	console.log(currentXMean);
+	if(currentXMean > .95){
 		return true;
 	}
 }
+
+function HandIsTooFarForward(){
+	zValues = framesOfData.slice([],[],[2,6,3]);
+	currentZMean = zValues.mean();
+	zShift = 0.5 - currentZMean;
+	
+	zValues = framesOfData.slice([],[],[2,6,3]);
+	currentZMean = zValues.mean();
+	
+	
+
+	if(currentZMean < .25){
+		return true;
+	}
+
+}
+
+function HandIsTooFarBack(){
+	zValues = framesOfData.slice([],[],[2,6,3]);
+	currentZMean = zValues.mean();
+	zShift = 0.5 - currentZMean;
+	
+	zValues = framesOfData.slice([],[],[2,6,3]);
+	currentZMean = zValues.mean();
+	
+	
+
+	if(currentZMean > .95){
+		return true;
+	}
+}
+
+function HandIsTooHigh(){
+	yValues = framesOfData.slice([],[],[1,6,3]);
+	currentYMean = yValues.mean();
+	
+	horizontalShift = 0.5 - currentMean;
+
+	verticalShift = 0.5 - currentYMean;
+
+	xValues = framesOfData.slice([],[],[0,6,3]);
+	
+
+	yValues = framesOfData.slice([],[],[1,6,3]);
+	currentYMean = yValues.mean();
+	//console.log(currentYMean);
+	if(currentYMean <.25){
+		return true;
+	}
+}
+
+function HandIsTooLow(){
+	yValues = framesOfData.slice([],[],[1,6,3]);
+	currentYMean = yValues.mean();
+	
+	horizontalShift = 0.5 - currentMean;
+
+	verticalShift = 0.5 - currentYMean;
+	
+	xValues = framesOfData.slice([],[],[0,6,3]);
+	
+
+	yValues = framesOfData.slice([],[],[1,6,3]);
+	currentYMean = yValues.mean();
+	if(currentYMean > .95){
+		return true;
+	}
+}
+
 
 function HandleState0(frame) {
 	TrainKNNIfNotDoneYet()
@@ -100,11 +210,27 @@ function HandleState1(frame){
 	HandleFrame(frame);
 	//Test();
 	if ( HandIsTooFarToTheLeft() ) {
-           DrawArrowRight() 
+		console.log('right arrow');
+           DrawArrowRight();
 	}
-	if(HandIsTooFarToTheRight){
-		DrawArrowLeft()
+		else if(HandIsTooFarToTheRight){
+			DrawArrowLeft();
+		}
+	
+	if(HandIsTooFarForward){
+		console.log('money back on that one');
+		DrawArrowBack();
 	}
+		else if(HandIsTooFarBack){
+			console.log('the money is mine youll never getit');
+			DrawArrowForth();
+		}
+	if(HandIsTooHigh){
+		DrawArrowDown();
+	}
+		else if(HandIsTooLow){
+			DrawArrowUp();
+		}
 }
 
 function HandleState2(frame){
@@ -115,9 +241,28 @@ function HandleState2(frame){
 function DrawArrowLeft(){
 	image(tooright, 0,0);
 }
+
 function DrawArrowRight(){
 	image (tooleft, 0,0);
 }
+
+function DrawArrowBack(){
+	image (tooforward, 0,0);
+}
+
+function DrawArrowForth(){
+	image (toobackward, 0,0);
+}
+
+function DrawArrowUp(){
+	image (toohigh, 0,0);
+}
+
+function DrawArrowDown(){
+	image (toolow, 0,0);
+}
+
+
  
 function TrainKNNIfNotDoneYet(){
 	if(trainingCompleted == false){
@@ -131,7 +276,7 @@ function DrawImageToHelpUserPutTheirHandOverTheDevice(){
 
 function Train(){
 	for(i = 0; i < 2; i++){
-		/*features1 = train1.pick(null,null,null,i);
+		features1 = train1.pick(null,null,null,i);
 		features1Wolley = train1Wolley.pick(null,null,null,i);
 		features1Riofrio = train1Riofrio.pick(null,null,null,i);
 		//features1Hunt = train1Hunt.pick(null,null,null,i);
@@ -237,21 +382,21 @@ function Train(){
 		knnClassifier.addExample(features9B.tolist(), 9);
 		knnClassifier.addExample(features0.tolist(), 0);
 		knnClassifier.addExample(features0B.tolist(), 0);
-		*/
+		
 		testinteger += 1;
 		//console.log(testinteger);
 	}
 }
 function Test(){
 	
-		/*
+		
 	CleanData();
 	CleanDataZ();
 	features = framesOfData.reshape(1,120);
 
 	predictedSign = knnClassifier.classify(features.tolist(),GotResults);
 		
-	*/
+	
 }
 function CleanData(){
 	xValues = framesOfData.slice([],[],[0,6,3]);
@@ -319,9 +464,7 @@ function CleanDataZ(){
 	
 	
 }
-//having trouble iterating over rows and columns
-//do i use slice?
-//pick was removed from num js wiki, is it no longer viable?
+
 function GotResults(err, result){
 	if(result){
 		
