@@ -60,6 +60,57 @@ if (programstate==0) {
 	previousNumHands = currentNumHands;
 } );
 	
+function SignIn(){
+    //console.log('sign in called');
+	var list = document.getElementById(`users`);
+	
+	
+	username = document.getElementById(`username`).value;
+	if(IsNewUser(username,list) == true) {
+		
+		CreateNewUser(username,list);
+		CreateSignInItem(username,list);
+	}
+	else{
+		ID = String(username) + "_signins";
+		listItem = document.getElementById( ID );
+		listItem.innerHTML = parseInt(listItem.innerHTML) + 1;
+	}
+	console.log(list.innerHTML);
+	console.log(username);
+	//console.log(list);
+	return false;
+}
+
+function IsNewUser(username,list){
+	usernameFound = false;
+	var users = list.children;
+	for(i = 0; i < users.length; i++){
+		if(username == users[i].innerHTML){
+			usernameFound = true;
+			
+		}
+		console.log(users[i],users[i].innerHTML);
+	}
+	return usernameFound == false;
+	
+}
+
+function CreateNewUser(username,list){
+		var item = document.createElement(`li`);
+		item.innerHTML = String(username);
+		item.id = String(username) + "_name";
+		list.appendChild(item);
+		
+}
+
+function CreateSignInItem(username,list){
+		var signins = document.createElement(`li`);
+		signins.innerHTML = 1;
+		signins.id = String(username) + '_signins';
+		list.appendChild(signins);
+}
+
 function DetermineState(frame){
 	//console.log(frame.hands.length);
 	if(frame.hands.length > 0){
