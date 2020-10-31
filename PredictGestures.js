@@ -79,15 +79,15 @@ function DetermineState(frame){
 	
 function HandIsUncentered(){
 	if(HandIsTooFarToTheLeft() || HandIsTooFarToTheRight()){
-		console.log('left right');
+		//console.log('left right');
 		return true;
 	}
 	else if(HandIsTooFarBack() || HandIsTooFarForward()){
-		console.log('back and forth');
+		//console.log('back and forth');
 		return true;
 	}
 	else if(HandIsTooHigh() || HandIsTooLow()){
-		console.log(' heigth');
+		//console.log(' heigth');
 		return true;
 	}
 	return false;
@@ -126,7 +126,7 @@ function HandIsTooFarToTheRight(){
 
 	yValues = framesOfData.slice([],[],[1,6,3]);
 	currentXMean = xValues.mean();
-	console.log(currentXMean);
+	//console.log(currentXMean);
 	if(currentXMean > .95){
 		return true;
 	}
@@ -210,25 +210,25 @@ function HandleState1(frame){
 	HandleFrame(frame);
 	//Test();
 	if ( HandIsTooFarToTheLeft() ) {
-		console.log('right arrow');
+		//console.log('right arrow');
            DrawArrowRight();
 	}
-		else if(HandIsTooFarToTheRight){
+		else if(HandIsTooFarToTheRight()){
 			DrawArrowLeft();
 		}
 	
-	if(HandIsTooFarForward){
-		console.log('money back on that one');
+	if(HandIsTooFarForward()){
+		//console.log('too far forard');
 		DrawArrowBack();
 	}
-		else if(HandIsTooFarBack){
-			console.log('the money is mine youll never getit');
+		else if(HandIsTooFarBack()){
+			//console.log('the money is mine youll never getit');
 			DrawArrowForth();
 		}
-	if(HandIsTooHigh){
+	if(HandIsTooHigh()){
 		DrawArrowDown();
 	}
-		else if(HandIsTooLow){
+		else if(HandIsTooLow()){
 			DrawArrowUp();
 		}
 }
@@ -239,27 +239,27 @@ function HandleState2(frame){
 }
 
 function DrawArrowLeft(){
-	image(tooright, 0,0);
+	image(tooright, 800,0);
 }
 
 function DrawArrowRight(){
-	image (tooleft, 0,0);
+	image (tooleft, 800,0);
 }
 
 function DrawArrowBack(){
-	image (tooforward, 0,0);
+	image (tooforward, 800,0);
 }
 
 function DrawArrowForth(){
-	image (toobackward, 0,0);
+	image (toobackward, 800,0);
 }
 
 function DrawArrowUp(){
-	image (toohigh, 0,0);
+	image (toohigh, 800,0);
 }
 
 function DrawArrowDown(){
-	image (toolow, 0,0);
+	image (toolow, 800,0);
 }
 
 
