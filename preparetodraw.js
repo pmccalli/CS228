@@ -5,6 +5,8 @@ var tooforward;
 var toobackward;
 var tooleft;
 var tooright;
+var eightpic;
+var zeropic;
 function setup() {
 createCanvas(window.innerWidth,window.innerHeight);
 	img = loadImage('https://i.imgur.com/zz8Iq2k.jpg');
@@ -14,4 +16,6 @@ createCanvas(window.innerWidth,window.innerHeight);
 	toobackward = loadImage('https://i.imgur.com/SdyeKck.jpg');
 	tooleft = loadImage('https://i.imgur.com/7pgqW1y.jpg');
 	tooright = loadImage('https://i.imgur.com/z3Impih.jpeg');
+	zeropic = loadImage('https://i.imgur.com/W2gZN03.png');
+	eightpic = loadImage('https://i.imgur.com/jHIWpsO.png');
 }

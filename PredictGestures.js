@@ -9,8 +9,10 @@ let m = 0;
 let d = 3;
 let c = 0;
 var programstate = 0;
+var DigitToShow = 0;
 
 //let numFeatures = nj.zeros(150, 4);
+var timeSinceLastDigitChange = new Date();
 
 
 var numSamples = 99;
@@ -286,7 +288,48 @@ function HandleState1(frame){
 
 function HandleState2(frame){
 		HandleFrame(frame);
-		//Test();
+		DrawLowerRightPanel();
+		DetermineWhetherToSwitchDigits();
+		Test();
+}
+ 
+function DrawLowerRightPanel(){
+	if(DigitToShow == 0){
+		image(zeropic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else{
+		image(eightpic, window.innerWidth/2, window.innerHeight/2);
+	}
+}
+function DetermineWhetherToSwitchDigits(){
+	if(TimeToSwitchDigits()){
+		SwitchDigits();
+	}
+	
+}
+
+function TimeToSwitchDigits(){
+	currentTime = new Date();
+	inMiliseconds = currentTime - timeSinceLastDigitChange;
+	inSeconds = inMiliseconds / 1000;
+	//console.log(inSeconds);
+	if(inSeconds > 5){
+		timeSinceLastDigitChange = currentTime;
+		n = 0;
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+function SwitchDigits(){
+	if(DigitToShow == 0){
+		DigitToShow = 8;
+	}
+	else{
+		DigitToShow = 0;
+	}
 }
 
 function DrawArrowLeft(){
@@ -521,9 +564,9 @@ function GotResults(err, result){
 		
 		c = parseInt(result.label);
 		n += 1;
-		m = (((n - 1)* m + (parseInt(result.label) == d))/ n); 
+		m = (((n - 1)* m + (parseInt(result.label) == DigitToShow))/ n); 
 		//console.log(err);
-		console.log(c);
+		console.log(c,m);
 		//console.log(parseInt(result.label));
 	}
 	else{
@@ -571,7 +614,9 @@ function HandleFinger(finger, fingerIndex, interactionBox){
 			stroke(255 - (i*40),0,0);
 		}*/
 		strokeWeight(5 - i);
-		stroke(180 - (i*40));
+		stroke(255-m*255,255*m,0/*(i*40)*/);
+		//green = m
+		//red = 1 - m
 		HandleBone(bone, fingerIndex, boneIndex, interactionBox)
 	}
 }
