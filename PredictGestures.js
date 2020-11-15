@@ -295,10 +295,44 @@ function HandleState2(frame){
  
 function DrawLowerRightPanel(){
 	if(DigitToShow == 0){
+		zeropic.resize(400, 0);
 		image(zeropic, window.innerWidth/2, window.innerHeight/2);
 	}
-	else{
+	else if(DigitToShow == 1){
+		onepic.resize(400, 0);
+		image(onepic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 2){
+		twopic.resize(400, 0);
+		image(twopic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 3){
+		threepic.resize(400, 0);
+		image(threepic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 4){
+		fourpic.resize(400, 0);
+		image(fourpic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 5){
+		fivepic.resize(400, 0);
+		image(fivepic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 6){
+		sixpic.resize(400, 0);
+		image(sixpic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 7){
+		sevenpic.resize(400, 0);
+		image(sevenpic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 8){
+		eightpic.resize(400, 0);
 		image(eightpic, window.innerWidth/2, window.innerHeight/2);
+	}
+	else{
+		ninepic.resize(400, 0);
+		image(ninepic, window.innerWidth/2, window.innerHeight/2);
 	}
 }
 function DetermineWhetherToSwitchDigits(){
@@ -309,14 +343,19 @@ function DetermineWhetherToSwitchDigits(){
 }
 
 function TimeToSwitchDigits(){
-	currentTime = new Date();
-	inMiliseconds = currentTime - timeSinceLastDigitChange;
-	inSeconds = inMiliseconds / 1000;
-	//console.log(inSeconds);
-	if(inSeconds > 5){
-		timeSinceLastDigitChange = currentTime;
-		n = 0;
-		return true;
+	if( m >= .68){
+		currentTime = new Date();
+		inMiliseconds = currentTime - timeSinceLastDigitChange;
+		inSeconds = inMiliseconds / 1000;
+		//console.log(inSeconds);
+		if(inSeconds > 5){
+			timeSinceLastDigitChange = currentTime;
+			n = 0;
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	else{
 		return false;
@@ -325,7 +364,31 @@ function TimeToSwitchDigits(){
 
 function SwitchDigits(){
 	if(DigitToShow == 0){
+		DigitToShow = 1;
+	}
+	else if(DigitToShow == 1){
+		DigitToShow = 2;
+	}
+	else if(DigitToShow == 2){
+		DigitToShow = 3;
+	}
+	else if(DigitToShow == 3){
+		DigitToShow = 4;
+	}
+	else if(DigitToShow == 4){
+		DigitToShow = 5;
+	}
+	else if(DigitToShow == 5){
+		DigitToShow = 6;
+	}
+	else if(DigitToShow == 6){
+		DigitToShow = 7;
+	}
+	else if(DigitToShow == 7){
 		DigitToShow = 8;
+	}
+	else if(DigitToShow == 8){
+		DigitToShow = 9;
 	}
 	else{
 		DigitToShow = 0;
@@ -333,27 +396,33 @@ function SwitchDigits(){
 }
 
 function DrawArrowLeft(){
+	//tooright.resize(400, 0);
 	image(tooright, 800,0);
 }
 
 function DrawArrowRight(){
-	image (tooleft, 800,0);
+	tooleft.resize(400, 0);
+	image (tooleft, window.innerWidth,0);
 }
 
 function DrawArrowBack(){
-	image (tooforward, 800,0);
+	tooforward.resize(400, 0);
+	image (tooforward, window.innerWidth,0);
 }
 
 function DrawArrowForth(){
-	image (toobackward, 800,0);
+	toobackward.resize(400, 0);
+	image (toobackward, window.innerWidth,0);
 }
 
 function DrawArrowUp(){
-	image (toohigh, 800,0);
+	toohigh.resize(400, 0);
+	image (toohigh, window.innerWidth,0);
 }
 
 function DrawArrowDown(){
-	image (toolow, 800,0);
+	toolow.resize(400, 0);
+	image (toolow, window.innerWidth,0);
 }
 
 
@@ -380,12 +449,14 @@ function Train(){
 		features1M4 = train1McCallion4.pick(null,null,null,i);
 		features1M5 = train1McCallion5.pick(null,null,null,i);
 		features1M6 = train1McCallion6.pick(null,null,null,i);
+		features1M7 = train1McCallion7.pick(null,null,null,i);
 		features1Ms = train1McCallions.pick(null,null,null,i);
 		features1Mc = train1McLaughlin.pick(null,null,null,i);
 		features1D = train1Davis.pick(null,null,null,i);
 		features1J = train1Jimmo.pick(null,null,null,i);
 		features1L = train1Li.pick(null,null,null,i);
 		features2 = train2.pick(null,null,null,i);
+		features2M = train2McCallion.pick(null,null,null,i);
 		features2R = train2Rielly.pick(null,null,null,i);
 		features3 = train3.pick(null,null,null,i);
 		features3M = train3McCallion.pick(null,null,null,i);
@@ -417,12 +488,14 @@ function Train(){
 		features1M4 = features1M4.reshape(1,120);
 		features1M5 = features1M5.reshape(1,120);
 		features1M6 = features1M6.reshape(1,120);
+		features1M7 = features1M7.reshape(1,120);
 		features1Ms = features1Ms.reshape(1,120);
 		features1Mc = features1Mc.reshape(1,120);
 		features1D = features1D.reshape(1,120);
 		features1J = features1J.reshape(1,120);
 		features1L = features1L.reshape(1,120);
 		features2 = features2.reshape(1,120);
+		features2M = features2M.reshape(1,120);
 		features2R = features2R.reshape(1,120);
 		features3 = features3.reshape(1,120);
 		features3M = features3M.reshape(1,120);
@@ -452,12 +525,14 @@ function Train(){
 		knnClassifier.addExample(features1M4.tolist(), 1);
 		knnClassifier.addExample(features1M5.tolist(), 1);
 		knnClassifier.addExample(features1M6.tolist(), 1);
+		knnClassifier.addExample(features1M7.tolist(), 1);
 		knnClassifier.addExample(features1Ms.tolist(), 1);
 		knnClassifier.addExample(features1Mc.tolist(), 1);
 		knnClassifier.addExample(features1D.tolist(), 1);
 		knnClassifier.addExample(features1J.tolist(), 1);
 		knnClassifier.addExample(features1L.tolist(), 1);
 		knnClassifier.addExample(features2.tolist(), 2);
+		knnClassifier.addExample(features2M.tolist(), 2);
 		knnClassifier.addExample(features2R.tolist(), 2);
 		knnClassifier.addExample(features3.tolist(), 3);
 		knnClassifier.addExample(features3M.tolist(), 3);
