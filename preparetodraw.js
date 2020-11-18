@@ -15,6 +15,17 @@ var fivepic;
 var sixpic;
 var sevenpic;
 var ninepic;
+
+var eightpica;
+var zeropica;
+var onepica;
+var twopica;
+var threepica;
+var fourpica;
+var fivepica;
+var sixpica;
+var sevenpica;
+var ninepica;
 function setup() {
 createCanvas(window.innerWidth,window.innerHeight);
 	img = loadImage('https://i.imgur.com/zz8Iq2k.jpg');
@@ -34,6 +45,14 @@ createCanvas(window.innerWidth,window.innerHeight);
 	sevenpic= loadImage('https://i.imgur.com/2oQKgM3.jpg');
 	eightpic = loadImage('https://i.imgur.com/jHIWpsO.png');
 	ninepic= loadImage('https://i.imgur.com/okRA1ya.jpg');
-	
-
+	zeropica = loadImage('https://i.imgur.com/vgUbNNu.png');
+	onepica = loadImage('https://i.imgur.com/oGGuOaH.png');
+	twopica = loadImage('https://i.imgur.com/reTD1Vm.jpg');
+	threepica = loadImage('https://i.imgur.com/Fyq5u12.jpg');
+	fourpica = loadImage('https://i.imgur.com/P19LrgT.jpg');
+	fivepica = loadImage('https://i.imgur.com/bxB5ePF.jpg');
+	sixpica = loadImage('https://i.imgur.com/RejtuvC.jpg');
+	sevenpica = loadImage('https://i.imgur.com/cW4x3W7.jpg');
+	eightpica = loadImage('https://i.imgur.com/GNR48F6.png');
+	ninepica = loadImage('https://i.imgur.com/MQ8OU45.jpg');
 }

@@ -10,6 +10,7 @@ let d = 3;
 let c = 0;
 var programstate = 0;
 var DigitToShow = 0;
+var allottedTime = 10;
 
 //let numFeatures = nj.zeros(150, 4);
 var timeSinceLastDigitChange = new Date();
@@ -44,17 +45,20 @@ z = 0;
 Leap.loop( controllerOptions, function(frame){
 	 clear();
  DetermineState(frame);
- //console.log(programstate);
+ console.log('ps' + programstate);
 if (programstate==0) {
 	HandleState0(frame);
  }
  else if (programstate==1) {
 	 //console.log(programstate);
-	HandleState1(frame);
+	//HandleState1(frame);
+	HandleFrame(frame);
  }
  else if (programstate == 2){
-	 HandleState2(frame);
+	 HandleState2(frame); 
+	 
  }
+ 
 	
 	
 	currentNumHands = frame.hands.length;
@@ -120,7 +124,7 @@ function DetermineState(frame){
 			programstate = 1;
 			//the users hand is off center
 		}
-		else if(!HandIsUncentered()){
+		else{
 			programstate = 2;// the users hand is present and centered
 		}
 		
@@ -132,15 +136,15 @@ function DetermineState(frame){
 	
 function HandIsUncentered(){
 	if(HandIsTooFarToTheLeft() || HandIsTooFarToTheRight()){
-		//console.log('left right');
+		console.log('left right');
 		return true;
 	}
 	else if(HandIsTooFarBack() || HandIsTooFarForward()){
-		//console.log('back and forth');
+		console.log('back and forth');
 		return true;
 	}
 	else if(HandIsTooHigh() || HandIsTooLow()){
-		//console.log(' heigth');
+		console.log(' heigth');
 		return true;
 	}
 	return false;
@@ -148,109 +152,84 @@ function HandIsUncentered(){
 
 function HandIsTooFarToTheLeft(){
 	xValues = framesOfData.slice([],[],[0,6,3]);
-	currentMean = xValues.mean();
-	
-	
-	//console.log('Leftie test');
-	horizontalShift = 0.5 - currentMean;
-
-
-	xValues = framesOfData.slice([],[],[0,6,3]);
-	//console.log(xValues.toString());
-
-	yValues = framesOfData.slice([],[],[1,6,3]);
 	currentXMean = xValues.mean();
-	//console.log(currentXMean);
+	
+	
+
 	if(currentXMean < .25){
 		return true;
 	}
+	return false;
 	
 }
 
 function HandIsTooFarToTheRight(){
-	xValues = framesOfData.slice([],[],[0,6,3]);
-	currentMean = xValues.mean();
-	//console.log('rightie test');
-	horizontalShift = 0.5 - currentMean;
-
-
-	xValues = framesOfData.slice([],[],[0,6,3]);
 	
-
-	yValues = framesOfData.slice([],[],[1,6,3]);
+	// 0.5.... 0.7..... 0.5
+	xValues = framesOfData.slice([],[],[0,6,3]);
 	currentXMean = xValues.mean();
-	//console.log(currentXMean);
+	
+	//shifted = currentXMean - 0.5;
+	
+	//console.log('rightie test');
+	console.log(xValues.toString());
+	console.log('rightie '+ currentXMean);
+
+	//if(shifted < 0.05) {
 	if(currentXMean > .95){
 		return true;
 	}
+	return false;
 }
 
 function HandIsTooFarForward(){
 	zValues = framesOfData.slice([],[],[2,6,3]);
 	currentZMean = zValues.mean();
-	zShift = 0.5 - currentZMean;
-	
-	zValues = framesOfData.slice([],[],[2,6,3]);
-	currentZMean = zValues.mean();
+
 	
 	
 
 	if(currentZMean < .25){
 		return true;
 	}
+	return false;
 
 }
 
 function HandIsTooFarBack(){
 	zValues = framesOfData.slice([],[],[2,6,3]);
 	currentZMean = zValues.mean();
-	zShift = 0.5 - currentZMean;
 	
-	zValues = framesOfData.slice([],[],[2,6,3]);
-	currentZMean = zValues.mean();
 	
 	
 
 	if(currentZMean > .95){
 		return true;
 	}
+	return false;
 }
 
 function HandIsTooHigh(){
 	yValues = framesOfData.slice([],[],[1,6,3]);
 	currentYMean = yValues.mean();
 	
-	horizontalShift = 0.5 - currentMean;
-
-	verticalShift = 0.5 - currentYMean;
-
-	xValues = framesOfData.slice([],[],[0,6,3]);
 	
-
-	yValues = framesOfData.slice([],[],[1,6,3]);
-	currentYMean = yValues.mean();
 	//console.log(currentYMean);
 	if(currentYMean <.25){
 		return true;
 	}
+	return false;
 }
 
 function HandIsTooLow(){
 	yValues = framesOfData.slice([],[],[1,6,3]);
 	currentYMean = yValues.mean();
 	
-	horizontalShift = 0.5 - currentMean;
-
-	verticalShift = 0.5 - currentYMean;
 	
-	xValues = framesOfData.slice([],[],[0,6,3]);
-	
-
-	yValues = framesOfData.slice([],[],[1,6,3]);
-	currentYMean = yValues.mean();
 	if(currentYMean > .95){
 		return true;
 	}
+	return false;
 }
 
 
@@ -296,43 +275,85 @@ function HandleState2(frame){
 function DrawLowerRightPanel(){
 	if(DigitToShow == 0){
 		zeropic.resize(400, 0);
+		zeropica.resize(400, 0);
+		
+		tint(255,255 -511*m);
 		image(zeropic, window.innerWidth/2, window.innerHeight/2);
+		tint(255,0 + 255*m);
+		image(zeropica, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if(DigitToShow == 1){
 		onepic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(onepic, window.innerWidth/2, window.innerHeight/2);
+		onepica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(onepica, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if(DigitToShow == 2){
 		twopic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(twopic, window.innerWidth/2, window.innerHeight/2);
+		twopica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(twopica, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if(DigitToShow == 3){
 		threepic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(threepic, window.innerWidth/2, window.innerHeight/2);
+		threepica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(threepica, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if(DigitToShow == 4){
 		fourpic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(fourpic, window.innerWidth/2, window.innerHeight/2);
+		fourpica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(fourpica, window.innerWidth/2, window.innerHeight/2);
+		
 	}
 	else if(DigitToShow == 5){
 		fivepic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(fivepic, window.innerWidth/2, window.innerHeight/2);
+		fivepica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(fivepica, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if(DigitToShow == 6){
 		sixpic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(sixpic, window.innerWidth/2, window.innerHeight/2);
+		sixpica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(sixpica, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if(DigitToShow == 7){
 		sevenpic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(sevenpic, window.innerWidth/2, window.innerHeight/2);
+		sevenpica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(sevenpica, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if(DigitToShow == 8){
 		eightpic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(eightpic, window.innerWidth/2, window.innerHeight/2);
+		eightpica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(eightpica, window.innerWidth/2, window.innerHeight/2);
 	}
 	else{
 		ninepic.resize(400, 0);
+		tint(255,255 -511*m);
 		image(ninepic, window.innerWidth/2, window.innerHeight/2);
+		ninepica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(ninepica, window.innerWidth/2, window.innerHeight/2);
 	}
 }
 function DetermineWhetherToSwitchDigits(){
@@ -343,25 +364,42 @@ function DetermineWhetherToSwitchDigits(){
 }
 
 function TimeToSwitchDigits(){
+	currentTime = new Date();
+	inMiliseconds = currentTime - timeSinceLastDigitChange;
+	inSeconds = inMiliseconds / 1000;
+	
 	if( m >= .68){
-		currentTime = new Date();
-		inMiliseconds = currentTime - timeSinceLastDigitChange;
-		inSeconds = inMiliseconds / 1000;
-		//console.log(inSeconds);
-		if(inSeconds > 5){
-			timeSinceLastDigitChange = currentTime;
+		allottedTime = allottedTime - 1;
+		if(allottedTime <= 4){
+			allottedTime = 5;
 			n = 0;
-			return true;
+			//console.log(allottedTime);
 		}
-		else{
-			return false;
-		}
+		timeSinceLastDigitChange = currentTime;
+		m = 0;
+		return true;
+		
+	}
+	
+	//console.log(inSeconds);
+	//if(inSeconds > 5){
+		
+	//}
+	
+	if(inSeconds >= allottedTime){
+		allottedTime+= 1;
+		timeSinceLastDigitChange = currentTime;
+		n = 0;
+		m = 0;
+		//console.log(allottedTime);
+		return true;
 	}
 	else{
 		return false;
 	}
 }
-
+//set 10 second base, time increases or decreases based on how long it took person to sign digit, aka if they signed it within allotted time or if they failed success is reaching 68% accuracy
+// variable that determines timer, access the average
 function SwitchDigits(){
 	if(DigitToShow == 0){
 		DigitToShow = 1;
@@ -396,33 +434,39 @@ function SwitchDigits(){
 }
 
 function DrawArrowLeft(){
-	//tooright.resize(400, 0);
-	image(tooright, 800,0);
+	tooright.resize(600, 0);
+	image(tooright, 1000,0);
 }
-
+//comment out all of the function back to just placing the warning message
+//comment out everything that has to do with state two, making it easier to debug
+//user should be given an appropriate amount of time to sign the diigit
+//amount of time to sign shortens when they sign correctly and lengthens when they sign incorrectly
+//videos only need to show the mechanism working, not necessarily all numbers.
+//set 10 second base, time increases or decreases based on how long it took person to sign digit, aka if they signed it within allotted time or if they failed success is reaching 68% accuracy
+// variable that determines timer, access the average
 function DrawArrowRight(){
-	tooleft.resize(400, 0);
-	image (tooleft, window.innerWidth,0);
+	tooleft.resize(600, 0);
+	image (tooleft, 1000,0);
 }
 
 function DrawArrowBack(){
-	tooforward.resize(400, 0);
-	image (tooforward, window.innerWidth,0);
+	tooforward.resize(600, 0);
+	image (tooforward, 1000,0);
 }
 
 function DrawArrowForth(){
-	toobackward.resize(400, 0);
-	image (toobackward, window.innerWidth,0);
+	toobackward.resize(600, 0);
+	image (toobackward, 1000,0);
 }
 
 function DrawArrowUp(){
-	toohigh.resize(400, 0);
-	image (toohigh, window.innerWidth,0);
+	toohigh.resize(600, 0);
+	image (toohigh, 1000,0);
 }
 
 function DrawArrowDown(){
-	toolow.resize(400, 0);
-	image (toolow, window.innerWidth,0);
+	toolow.resize(600, 0);
+	image (toolow, 1000,0);
 }
 
 
@@ -457,12 +501,15 @@ function Train(){
 		features1L = train1Li.pick(null,null,null,i);
 		features2 = train2.pick(null,null,null,i);
 		features2M = train2McCallion.pick(null,null,null,i);
+		features2M2 = train2McCallion2.pick(null,null,null,i);
 		features2R = train2Rielly.pick(null,null,null,i);
 		features3 = train3.pick(null,null,null,i);
 		features3M = train3McCallion.pick(null,null,null,i);
+		features3M2 = train3McCallion2.pick(null,null,null,i);
 		
 		features4 = train4.pick(null,null,null,i);
 		features4M = train4McCallion.pick(null,null,null,i);
+		features4M2 = train4McCallion2.pick(null,null,null,i);
 		//features4OBrien = train4OBrien.pick(null,null,null, i);
 		features5 = train5.pick(null,null,null,i);
 		//features5M = train5McCallion.pick(null,null,null,i);
@@ -472,6 +519,7 @@ function Train(){
 		features8 = train8.pick(null,null,null,i);
 		features8M2 = train8McCallion2.pick(null,null,null,i);
 		features8M3 = train8McCallion3.pick(null,null,null,i);
+		features8M4 = train8McCallion4.pick(null,null,null,i);
 		features9 = train9.pick(null,null,null,i);
 		features9M = train9McCallion.pick(null,null,null,i);
 		features9B = train9Bongard.pick(null,null,null,i);
@@ -496,11 +544,14 @@ function Train(){
 		features1L = features1L.reshape(1,120);
 		features2 = features2.reshape(1,120);
 		features2M = features2M.reshape(1,120);
+		features2M2 = features2M2.reshape(1,120);
 		features2R = features2R.reshape(1,120);
 		features3 = features3.reshape(1,120);
 		features3M = features3M.reshape(1,120);
+		features3M2 = features3M2.reshape(1,120);
 		features4 = features4.reshape(1,120);
 		features4M = features4M.reshape(1,120);
+		features4M2 = features4M2.reshape(1,120);
 		//features4OBrien = features4OBrien.reshape(1,120);
 		features5 = features5.reshape(1,120);
 		//features5M = features5M.reshape(1,120);
@@ -509,6 +560,7 @@ function Train(){
 		features8 = features8.reshape(1,120);
 		features8M2 = features8M2.reshape(1,120);
 		features8M3 = features8M3.reshape(1,120);
+		features8M4 = features8M4.reshape(1,120);
 		features9 = features9.reshape(1,120);
 		features9M = features9M.reshape(1,120);
 		features9B = features9B.reshape(1,120);
@@ -533,11 +585,14 @@ function Train(){
 		knnClassifier.addExample(features1L.tolist(), 1);
 		knnClassifier.addExample(features2.tolist(), 2);
 		knnClassifier.addExample(features2M.tolist(), 2);
+		knnClassifier.addExample(features2M2.tolist(), 2);
 		knnClassifier.addExample(features2R.tolist(), 2);
 		knnClassifier.addExample(features3.tolist(), 3);
 		knnClassifier.addExample(features3M.tolist(), 3);
+		knnClassifier.addExample(features3M2.tolist(), 3);
 		knnClassifier.addExample(features4.tolist(), 4);
 		knnClassifier.addExample(features4M.tolist(), 4);
+		knnClassifier.addExample(features4M2.tolist(), 4);
 		//knnClassifier.addExample(features4OBrien.tolist(), 4);
 		knnClassifier.addExample(features5.tolist(), 5);
 		//knnClassifier.addExample(features5M.tolist(), 5);
@@ -546,6 +601,7 @@ function Train(){
 		knnClassifier.addExample(features8.tolist(), 8);
 		knnClassifier.addExample(features8M2.tolist(), 8);
 		knnClassifier.addExample(features8M3.tolist(), 8);
+		knnClassifier.addExample(features8M4.tolist(), 8);
 		knnClassifier.addExample(features9.tolist(), 9);
 		knnClassifier.addExample(features9M.tolist(), 9);
 		knnClassifier.addExample(features9B.tolist(), 9);
@@ -571,9 +627,9 @@ function CleanData(){
 	xValues = framesOfData.slice([],[],[0,6,3]);
 	yValues = framesOfData.slice([],[],[1,6,3]);
 	currentYMean = yValues.mean();
-	currentMean = xValues.mean();
+	currentXMean = xValues.mean();
 
-	horizontalShift = 0.5 - currentMean;
+	horizontalShift = 0.5 - currentXMean;
 
 	verticalShift = 0.5 - currentYMean;
 	for(i = 0; i < 5; i++){
@@ -598,11 +654,10 @@ function CleanData(){
 			framesOfData.set(currentRow,currentColumn,4, shiftedY);
 		}
 	}
-	xValues = framesOfData.slice([],[],[0,6,3]);
-	
 
-	yValues = framesOfData.slice([],[],[1,6,3]);
-	currentYMean = yValues.mean();
+	//xValues = framesOfData.slice([],[],[0,6,3]);
+	//yValues = framesOfData.slice([],[],[1,6,3]);
+	//currentYMean = yValues.mean();
 
 	
 	
@@ -628,10 +683,8 @@ function CleanDataZ(){
 			framesOfData.set(currentRow,currentColumn,5, shiftedZ);
 		}
 	}
-	zValues = framesOfData.slice([],[],[2,6,3]);
-	currentZMean = zValues.mean();
-	
-	
+	//zValues = framesOfData.slice([],[],[2,6,3]);
+	//currentZMean = zValues.mean();
 }
 
 function GotResults(err, result){
@@ -641,7 +694,7 @@ function GotResults(err, result){
 		n += 1;
 		m = (((n - 1)* m + (parseInt(result.label) == DigitToShow))/ n); 
 		//console.log(err);
-		console.log(c,m);
+		//console.log(c,m);
 		//console.log(parseInt(result.label));
 	}
 	else{
@@ -676,7 +729,6 @@ function HandleHand(hand,interactionBox){
 }
 
 function HandleFinger(finger, fingerIndex, interactionBox){
-	
 	let bones = finger['bones'];
 	for(i in bones){
 		let boneIndex = i;
@@ -695,6 +747,7 @@ function HandleFinger(finger, fingerIndex, interactionBox){
 		HandleBone(bone, fingerIndex, boneIndex, interactionBox)
 	}
 }
+
 function HandleBone(bone, fingerIndex, boneIndex, interactionBox){
 	normalizedPrevJoint = interactionBox.normalizePoint(bone['prevJoint'], true);
 	normalizedNextJoint = interactionBox.normalizePoint(bone['nextJoint'], true)
