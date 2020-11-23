@@ -45,17 +45,18 @@ z = 0;
 Leap.loop( controllerOptions, function(frame){
 	 clear();
  DetermineState(frame);
- console.log('ps' + programstate);
+ //console.log('ps' + programstate);
 if (programstate==0) {
-	HandleState0(frame);
+	//HandleState0(frame);
  }
  else if (programstate==1) {
 	 //console.log(programstate);
-	//HandleState1(frame);
-	HandleFrame(frame);
+	HandleState1(frame);
+	//HandleFrame(frame);
  }
  else if (programstate == 2){
-	 HandleState2(frame); 
+	 //HandleFrame(frame);
+	HandleState2(frame); 
 	 
  }
  
@@ -136,15 +137,15 @@ function DetermineState(frame){
 	
 function HandIsUncentered(){
 	if(HandIsTooFarToTheLeft() || HandIsTooFarToTheRight()){
-		console.log('left right');
+		//console.log('left right');
 		return true;
 	}
 	else if(HandIsTooFarBack() || HandIsTooFarForward()){
-		console.log('back and forth');
+		//console.log('back and forth');
 		return true;
 	}
 	else if(HandIsTooHigh() || HandIsTooLow()){
-		console.log(' heigth');
+		//console.log(' heigth');
 		return true;
 	}
 	return false;
@@ -172,7 +173,7 @@ function HandIsTooFarToTheRight(){
 	//shifted = currentXMean - 0.5;
 	
 	//console.log('rightie test');
-	//console.log(xValues.toString());
+	console.log(xValues.toString());
 	//console.log('rightie '+ currentXMean);
 
 	//if(shifted < 0.05) {
@@ -267,8 +268,8 @@ function HandleState1(frame){
 
 function HandleState2(frame){
 		HandleFrame(frame);
-		DrawLowerRightPanel();
-		DetermineWhetherToSwitchDigits();
+		//DrawLowerRightPanel();
+		//DetermineWhetherToSwitchDigits();
 		Test();
 }
  //pair 10 equations with 10 digits
