@@ -11,7 +11,7 @@ let c = 0;
 var programstate = 0;
 var DigitToShow = 0;
 var allottedTime = 10;
-
+var nineexists = 0;
 //let numFeatures = nj.zeros(150, 4);
 var timeSinceLastDigitChange = new Date();
 
@@ -172,8 +172,8 @@ function HandIsTooFarToTheRight(){
 	//shifted = currentXMean - 0.5;
 	
 	//console.log('rightie test');
-	console.log(xValues.toString());
-	console.log('rightie '+ currentXMean);
+	//console.log(xValues.toString());
+	//console.log('rightie '+ currentXMean);
 
 	//if(shifted < 0.05) {
 	if(currentXMean > .95){
@@ -271,7 +271,7 @@ function HandleState2(frame){
 		DetermineWhetherToSwitchDigits();
 		Test();
 }
- 
+ //pair 10 equations with 10 digits
 function DrawLowerRightPanel(){
 	if(DigitToShow == 0){
 		zeropic.resize(400, 0);
@@ -347,7 +347,8 @@ function DrawLowerRightPanel(){
 		tint(255,0 + 255*m);
 		image(eightpica, window.innerWidth/2, window.innerHeight/2);
 	}
-	else{
+	else if (DigitToShow == 9){
+		nineexists = 1;
 		ninepic.resize(400, 0);
 		tint(255,255 -511*m);
 		image(ninepic, window.innerWidth/2, window.innerHeight/2);
@@ -355,6 +356,98 @@ function DrawLowerRightPanel(){
 		tint(255,0 + 255*m);
 		image(ninepica, window.innerWidth/2, window.innerHeight/2);
 	}
+	else if (DigitToShow == 10){
+		//blah blah
+		zeroeq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(zeroeq, window.innerWidth/2, window.innerHeight/2);
+		zeropica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(zeropica, window.innerWidth/2, window.innerHeight/2);
+		
+	}
+	else if (DigitToShow == 11){
+		//blah blah
+		oneeq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(oneeq, window.innerWidth/2, window.innerHeight/2);
+		onepica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(onepica, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 12){
+		//balch
+		twoeq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(twoeq, window.innerWidth/2, window.innerHeight/2);
+		twopica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(twopica, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 13){
+		//math is stupid
+		threeeq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(threeeq, window.innerWidth/2, window.innerHeight/2);
+		threepica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(threepica, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 14){
+		//fuckin preach
+		foureq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(foureq, window.innerWidth/2, window.innerHeight/2);
+		fourpica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(fourpica, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 15){
+		//multiplcation doesnt make sense
+		fiveeq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(fiveeq, window.innerWidth/2, window.innerHeight/2);
+		fivepica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(fivepica, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 16){
+		//testify to that my brother from here to zero stillneed spics
+		sixeq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(sixeq, window.innerWidth/2, window.innerHeight/2);
+		sixpica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(sixpica, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 17){
+		//did you just assume my gender
+		seveneq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(seveneq, window.innerWidth/2, window.innerHeight/2);
+		sevenpica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(sevenpica, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 18){
+		//goddamit frank we were having a moment
+		eighteq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(eighteq, window.innerWidth/2, window.innerHeight/2);
+		eightpica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(eightpica, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if(DigitToShow == 19){
+		//and now its gone, like my wife you piece of shit
+		nineeq.resize(400, 0);
+		tint(255,255 -511*m);
+		image(nineeq, window.innerWidth/2, window.innerHeight/2);
+		ninepica.resize(400, 0);
+		tint(255,0 + 255*m);
+		image(ninepica, window.innerWidth/2, window.innerHeight/2);
+	}
+	
 }
 function DetermineWhetherToSwitchDigits(){
 	if(TimeToSwitchDigits()){
@@ -400,6 +493,9 @@ function TimeToSwitchDigits(){
 }
 //set 10 second base, time increases or decreases based on how long it took person to sign digit, aka if they signed it within allotted time or if they failed success is reaching 68% accuracy
 // variable that determines timer, access the average
+// if digit 9 has been shown, add a random component to digit to show.
+// will randomly select a basic equation. equation will be paired with the number pictures
+//digit to show is an int, so the digit to show for the equation will be 10+ the answer
 function SwitchDigits(){
 	if(DigitToShow == 0){
 		DigitToShow = 1;
@@ -427,6 +523,11 @@ function SwitchDigits(){
 	}
 	else if(DigitToShow == 8){
 		DigitToShow = 9;
+	}
+	else if(nineexists == 1){
+		rand = Math.random()*10;
+		rand = Math.floor(rand);
+		DigitToShow = rand+10;
 	}
 	else{
 		DigitToShow = 0;
@@ -689,12 +790,17 @@ function CleanDataZ(){
 
 function GotResults(err, result){
 	if(result){
-		
+		if(DigitToShow >=10){
+			x = DigitToShow - 10;
+		}
+		else{
+			x = DigitToShow;
+		}
 		c = parseInt(result.label);
 		n += 1;
-		m = (((n - 1)* m + (parseInt(result.label) == DigitToShow))/ n); 
+		m = (((n - 1)* m + (parseInt(result.label) == x))/ n); 
 		//console.log(err);
-		//console.log(c,m);
+		console.log(c,m);
 		//console.log(parseInt(result.label));
 	}
 	else{
