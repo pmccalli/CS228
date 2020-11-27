@@ -47,7 +47,7 @@ Leap.loop( controllerOptions, function(frame){
  DetermineState(frame);
  //console.log('ps' + programstate);
 if (programstate==0) {
-	//HandleState0(frame);
+	HandleState0(frame);
  }
  else if (programstate==1) {
 	 //console.log(programstate);
@@ -136,6 +136,7 @@ function DetermineState(frame){
 }	
 	
 function HandIsUncentered(){
+	
 	if(HandIsTooFarToTheLeft() || HandIsTooFarToTheRight()){
 		//console.log('left right');
 		return true;
@@ -173,7 +174,7 @@ function HandIsTooFarToTheRight(){
 	//shifted = currentXMean - 0.5;
 	
 	//console.log('rightie test');
-	console.log(xValues.toString());
+	//console.log(xValues.toString());
 	//console.log('rightie '+ currentXMean);
 
 	//if(shifted < 0.05) {
@@ -268,8 +269,8 @@ function HandleState1(frame){
 
 function HandleState2(frame){
 		HandleFrame(frame);
-		//DrawLowerRightPanel();
-		//DetermineWhetherToSwitchDigits();
+		DrawLowerRightPanel();
+		DetermineWhetherToSwitchDigits();
 		Test();
 }
  //pair 10 equations with 10 digits
@@ -715,8 +716,17 @@ function Train(){
 	}
 }
 function Test(){
+	// framesOfData is some sort of advanced custom data structure...
+	// like a numpy array or a pandas dataframe, but javascript
+	// it should have a built in clone method or some way of duplicating it,
+	// however, normal javascript tools will not work, becaue it's not
+	// a normal javascript object, but a custom object from some data library
 	
-		
+	//framesOfData = JSON.parse(JSON.parse(JSON.stringify(framesOfData)));
+	//console.log(typeof framesOfData);
+	//framesOfData  = framesOfData.map(elem => elem);
+	//console.log(typeof framesOfData);
+	
 	CleanData();
 	CleanDataZ();
 	features = framesOfData.reshape(1,120);
@@ -728,6 +738,10 @@ function Test(){
 function CleanData(){
 	xValues = framesOfData.slice([],[],[0,6,3]);
 	yValues = framesOfData.slice([],[],[1,6,3]);
+	//console.log("--------");
+	
+	//console.log(typeof framesOfData);
+	
 	currentYMean = yValues.mean();
 	currentXMean = xValues.mean();
 
