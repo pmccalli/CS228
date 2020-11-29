@@ -9,11 +9,24 @@ let m = 0;
 let d = 3;
 let c = 0;
 var programstate = 0;
-var DigitToShow = 0;
-var allottedTime = 10;
+var DigitToShow = 7;
+var allottedTime = 15;
 var nineexists = 0;
 //let numFeatures = nj.zeros(150, 4);
 var timeSinceLastDigitChange = new Date();
+var averageM = 0;
+
+// averages and times shown for currently logged in player
+var digitAverages = [];
+var timesDigitShown =[];
+var allScores = {};
+
+
+
+
+
+
+
 
 
 var numSamples = 99;
@@ -59,7 +72,7 @@ if (programstate==0) {
 	HandleState2(frame); 
 	 
  }
- 
+	
 	
 	
 	currentNumHands = frame.hands.length;
@@ -74,7 +87,6 @@ function SignIn(){
 	
 	username = document.getElementById(`username`).value;
 	if(IsNewUser(username,list) == true) {
-		
 		CreateNewUser(username,list);
 		CreateSignInItem(username,list);
 	}
@@ -82,13 +94,104 @@ function SignIn(){
 		ID = String(username) + "_signins";
 		listItem = document.getElementById( ID );
 		listItem.innerHTML = parseInt(listItem.innerHTML) + 1;
+		//times user has signed in
 	}
+	
 	console.log(list.innerHTML);
 	console.log(username);
-	//console.log(list);
+	if((username in allScores) == false) {
+		allScores[username] = {};
+		allScores[username]['averages'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		allScores[username]['shown'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+	}
+	//timesDigitShown += 1;
+	//allScores[username]['shown'] += 1;
+	
 	return false;
 }
-
+//new function takes in m for all digits signed by user not equations
+//records them for storage in multiple sessions
+//attaches m per digit to user
+//attaches m average to user
+//m is the accuracy
+//accuracy for a user is compared with their previous sessions (reloads) in lower left corner
+//user average accuracy is compared with all other users in left hand corner as well
+//
+function RecordUserData(){
+	averageM += m;
+	temp = Math.floor(m * 100)/100;
+	//check what digittoshow is, many if else statments, checking which average
+	// is being added to, add m to list item. may have to edit this/
+	//program might take average m upon switch, meaning m will always be 0
+	if(DigitToShow == 0){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[0] += 1;
+			allScores[username]['averages'][0] += temp;
+			console.log(allScores[username]['averages'][0]);
+		}
+	}
+	else if(DigitToShow == 1){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[1] += 1;
+			allScores[username]['averages'][1] += temp;
+		}
+	}
+	else if(DigitToShow == 2){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[2] += 1;
+			allScores[username]['averages'][2] += temp;
+		}
+	}
+	else if(DigitToShow == 3){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[3] += 1;
+			allScores[username]['averages'][3] += temp;
+		}
+	}
+	else if(DigitToShow == 4){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[4] += 1;
+			allScores[username]['averages'][4] += temp;
+		}
+		
+	}
+	else if(DigitToShow == 5){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[5] += 1;
+			allScores[username]['averages'][5] += temp;
+		}
+	}
+	else if(DigitToShow == 6){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[6] += 1;
+			allScores[username]['averages'][6] += temp;
+		}
+	}
+	else if(DigitToShow == 7){
+		console.log(DigitToShow + " " + TimeToSwitchDigits());
+		if(TimeToSwitchDigits()){
+			timesDigitShown[7] += 1;
+			allScores[username]['averages'][7] += temp;
+		}
+	}
+	else if(DigitToShow == 8){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[8] += 1;
+			allScores[username]['averages'][8] += temp;
+		}
+	}
+	else if (DigitToShow == 9){
+		if(TimeToSwitchDigits()){
+			timesDigitShown[9] += 1;
+			allScores[username]['averages'][9] += temp;
+		}
+	}
+	
+		
+}
+//accuracy recording Done
+//make sure accuracy is persistent,
+//print accuracies to html page
 function IsNewUser(username,list){
 	usernameFound = false;
 	var users = list.children;
@@ -247,10 +350,10 @@ function HandleState1(frame){
 		//console.log('right arrow');
            DrawArrowRight();
 	}
-		else if(HandIsTooFarToTheRight()){
-			DrawArrowLeft();
-		}
-	
+	else if(HandIsTooFarToTheRight()){
+		DrawArrowLeft();
+	}
+
 	if(HandIsTooFarForward()){
 		//console.log('too far forard');
 		DrawArrowBack();
@@ -270,10 +373,26 @@ function HandleState1(frame){
 function HandleState2(frame){
 		HandleFrame(frame);
 		DrawLowerRightPanel();
+		DrawLowerLeftPanel();
+		RecordUserData()
 		DetermineWhetherToSwitchDigits();
+		
+		
 		Test();
 }
- //pair 10 equations with 10 digits
+
+function DrawLowerLeftPanel(){
+	//this function should draw the users current digit score in the lower left panel
+	//it should also show their total average with that digit, and the averages of past users
+	//it should also show the difference between the users current and previous session
+	//should print allscores and digit averages for current digit.
+	//should also be printing m with an indication that it is the current score.
+	foo= Math.floor(m * 100)/100
+	document.getElementById("output_box").innerHTML = "Dig Av:" + digitAverages + "<br>Dig Count: " + timesDigitShown;
+	document.getElementById("output_box").innerHTML = "Current Av:" + foo + "past av" +allScores[username]["averages"][DigitToShow] + 
+	"<br>Dig Count: " + timesDigitShown;
+}
+
 function DrawLowerRightPanel(){
 	if(DigitToShow == 0){
 		zeropic.resize(400, 0);
@@ -452,26 +571,24 @@ function DrawLowerRightPanel(){
 	
 }
 function DetermineWhetherToSwitchDigits(){
+		;
 	if(TimeToSwitchDigits()){
+		
+		
 		SwitchDigits();
 	}
 	
 }
 
 function TimeToSwitchDigits(){
-	currentTime = new Date();
-	inMiliseconds = currentTime - timeSinceLastDigitChange;
-	inSeconds = inMiliseconds / 1000;
-	
+		currentTime = new Date();
+		inMiliseconds = currentTime - timeSinceLastDigitChange
+		inSeconds = inMiliseconds / 1000;
 	if( m >= .68){
-		allottedTime = allottedTime - 1;
-		if(allottedTime <= 4){
-			allottedTime = 5;
-			n = 0;
-			//console.log(allottedTime);
-		}
-		timeSinceLastDigitChange = currentTime;
-		m = 0;
+		
+		
+		
+		
 		return true;
 		
 	}
@@ -482,10 +599,6 @@ function TimeToSwitchDigits(){
 	//}
 	
 	if(inSeconds >= allottedTime){
-		allottedTime+= 1;
-		timeSinceLastDigitChange = currentTime;
-		n = 0;
-		m = 0;
 		//console.log(allottedTime);
 		return true;
 	}
@@ -499,6 +612,25 @@ function TimeToSwitchDigits(){
 // will randomly select a basic equation. equation will be paired with the number pictures
 //digit to show is an int, so the digit to show for the equation will be 10+ the answer
 function SwitchDigits(){
+	currentTime = new Date();
+	console.log("switch Digits" + DigitToShow);
+	timeSinceLastDigitChange = currentTime;
+	allottedTime = allottedTime - 1;
+	if(allottedTime <= 4){
+		allottedTime = 5;
+		n = 0;
+		//console.log(allottedTime);
+	}
+	m = 0;
+	if(inSeconds >= allottedTime){
+		allottedTime+= 1;
+		timeSinceLastDigitChange = currentTime;
+		n = 0;
+		m = 0;
+		//console.log(allottedTime);
+		
+	}
+	
 	if(DigitToShow == 0){
 		DigitToShow = 1;
 	}
@@ -526,12 +658,15 @@ function SwitchDigits(){
 	else if(DigitToShow == 8){
 		DigitToShow = 9;
 	}
-	else if(nineexists == 1){
+	else if(nineexists == 1 && allottedTime <= 10){
+		
 		rand = Math.random()*10;
 		rand = Math.floor(rand);
 		DigitToShow = rand+10;
+		
 	}
-	else{
+	else if(DigitToShow == 9){
+		//console.log(DigitToShow);
 		DigitToShow = 0;
 	}
 }
@@ -815,7 +950,7 @@ function GotResults(err, result){
 		n += 1;
 		m = (((n - 1)* m + (parseInt(result.label) == x))/ n); 
 		//console.log(err);
-		console.log(c,m);
+		//console.log(c,m);
 		//console.log(parseInt(result.label));
 	}
 	else{
