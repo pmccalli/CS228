@@ -20,7 +20,9 @@ var averageM = 0;
 var digitAverages = [];
 var timesDigitShown =[];
 var allScores = {};
-
+allScores["metrics"] = {};
+allScores['metrics']['averages'] =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+allScores['metrics']['shown'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
 
@@ -83,7 +85,9 @@ if (programstate==0) {
 function SignIn(){
     //console.log('sign in called');
 	var list = document.getElementById(`users`);
-	
+	DigitToShow = 0;
+	allottedTime = 10;
+	nineexists = 0;
 	
 	username = document.getElementById(`username`).value;
 	if(IsNewUser(username,list) == true) {
@@ -102,6 +106,7 @@ function SignIn(){
 	if((username in allScores) == false) {
 		allScores[username] = {};
 		allScores[username]['averages'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+				
 		allScores[username]['shown'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 	}
 	//timesDigitShown += 1;
@@ -119,71 +124,148 @@ function SignIn(){
 //
 function RecordUserData(){
 	averageM += m;
-	temp = Math.floor(m * 100)/100;
+	flah = m *1.47058823529;
+	temp = Math.floor(flah * 100)/100;
+	temp = temp * 100;
 	//check what digittoshow is, many if else statments, checking which average
 	// is being added to, add m to list item. may have to edit this/
 	//program might take average m upon switch, meaning m will always be 0
 	if(DigitToShow == 0){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[0] += 1;
-			allScores[username]['averages'][0] += temp;
+			//t2 = shown * average
+			//shown +=1
+			//t2 += temp
+			//average = t2/shown
+			let t2 = allScores[username]['shown'][0] * allScores[username]['averages'][0];
+			allScores[username]['shown'][0] += 1;
+			t2 += temp;
+			allScores[username]['averages'][0] = t2/allScores[username]['shown'][0];
+			//allScores[username]['averages'][0] += temp;
+			//allScores['metrics']['averages'][0] += temp;
+			let t3 = allScores['metrics']['shown'][0] * allScores['metrics']['averages'][0];
+			allScores['metrics']['shown'][0] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][0] = t3/allScores['metrics']['shown'][0];
 			console.log(allScores[username]['averages'][0]);
 		}
 	}
 	else if(DigitToShow == 1){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[1] += 1;
-			allScores[username]['averages'][1] += temp;
+			let t2 = allScores[username]['shown'][1] * allScores[username]['averages'][1];
+			allScores[username]['shown'][1] += 1;
+			t2 += temp;
+			allScores[username]['averages'][1] = t2/allScores[username]['shown'][1];
+			let t3 = allScores['metrics']['shown'][0] * allScores['metrics']['averages'][1];
+			allScores['metrics']['shown'][1] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][1] = t3/allScores['metrics']['shown'][1];
+			allScores['metrics']['shown'][1] += 1;
 		}
 	}
 	else if(DigitToShow == 2){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[2] += 1;
-			allScores[username]['averages'][2] += temp;
+			let t2 = allScores[username]['shown'][2] * allScores[username]['averages'][2];
+			allScores[username]['shown'][2] += 1;
+			t2 += temp;
+			allScores[username]['averages'][2] = t2/allScores[username]['shown'][2];
+			let t3 = allScores['metrics']['shown'][0] * allScores['metrics']['averages'][2];
+			allScores['metrics']['shown'][2] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][2] = t3/allScores['metrics']['shown'][2];
+			allScores['metrics']['shown'][2] += 1;
 		}
 	}
 	else if(DigitToShow == 3){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[3] += 1;
-			allScores[username]['averages'][3] += temp;
+			let t2 = allScores[username]['shown'][3] * allScores[username]['averages'][3];
+			allScores[username]['shown'][3] += 1;
+			t2 += temp;
+			allScores[username]['averages'][3] = t2/allScores[username]['shown'][3];
+			let t3 = allScores['metrics']['shown'][3] * allScores['metrics']['averages'][3];
+			allScores['metrics']['shown'][3] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][3] = t3/allScores['metrics']['shown'][3];
+			allScores['metrics']['shown'][3] += 1;
 		}
 	}
 	else if(DigitToShow == 4){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[4] += 1;
-			allScores[username]['averages'][4] += temp;
+			let t2 = allScores[username]['shown'][4] * allScores[username]['averages'][4];
+			allScores[username]['shown'][4] += 1;
+			t2 += temp;
+			allScores[username]['averages'][4] = t2/allScores[username]['shown'][4];
+			let t3 = allScores['metrics']['shown'][4] * allScores['metrics']['averages'][4];
+			allScores['metrics']['shown'][4] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][4] = t3/allScores['metrics']['shown'][4];
+			allScores['metrics']['shown'][4] += 1;
 		}
 		
 	}
 	else if(DigitToShow == 5){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[5] += 1;
-			allScores[username]['averages'][5] += temp;
+			let t2 = allScores[username]['shown'][5] * allScores[username]['averages'][5];
+			allScores[username]['shown'][5] += 1;
+			t2 += temp;
+			allScores[username]['averages'][5] = t2/allScores[username]['shown'][5];
+			let t3 = allScores['metrics']['shown'][5] * allScores['metrics']['averages'][5];
+			allScores['metrics']['shown'][5] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][5] = t3/allScores['metrics']['shown'][5];
+			allScores['metrics']['shown'][5] += 1;
 		}
 	}
 	else if(DigitToShow == 6){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[6] += 1;
-			allScores[username]['averages'][6] += temp;
+			let t2 = allScores[username]['shown'][6] * allScores[username]['averages'][6];
+			allScores[username]['shown'][6] += 1;
+			t2 += temp;
+			allScores[username]['averages'][6] = t2/allScores[username]['shown'][6];
+			let t3 = allScores['metrics']['shown'][6] * allScores['metrics']['averages'][6];
+			allScores['metrics']['shown'][6] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][6] = t3/allScores['metrics']['shown'][6];
+			allScores['metrics']['shown'][6] += 1;
 		}
 	}
 	else if(DigitToShow == 7){
 		console.log(DigitToShow + " " + TimeToSwitchDigits());
 		if(TimeToSwitchDigits()){
-			timesDigitShown[7] += 1;
-			allScores[username]['averages'][7] += temp;
+			let t2 = allScores[username]['shown'][7] * allScores[username]['averages'][7];
+			allScores[username]['shown'][7] += 1;
+			t2 += temp;
+			allScores[username]['averages'][7] = t2/allScores[username]['shown'][7];
+			let t3 = allScores['metrics']['shown'][7] * allScores['metrics']['averages'][7];
+			allScores['metrics']['shown'][7] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][7] = t3/allScores['metrics']['shown'][7];
+			allScores['metrics']['shown'][7] += 1;
 		}
 	}
 	else if(DigitToShow == 8){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[8] += 1;
-			allScores[username]['averages'][8] += temp;
+			let t2 = allScores[username]['shown'][8] * allScores[username]['averages'][8];
+			allScores[username]['shown'][8] += 1;
+			t2 += temp;
+			allScores[username]['averages'][8] = t2/allScores[username]['shown'][8];
+			let t3 = allScores['metrics']['shown'][8] * allScores['metrics']['averages'][8];
+			allScores['metrics']['shown'][8] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][8] = t3/allScores['metrics']['shown'][8];
+			allScores['metrics']['shown'][8] += 1;
 		}
 	}
 	else if (DigitToShow == 9){
 		if(TimeToSwitchDigits()){
-			timesDigitShown[9] += 1;
-			allScores[username]['averages'][9] += temp;
+			let t2 = allScores[username]['shown'][9] * allScores[username]['averages'][9];
+			allScores[username]['shown'][9] += 1;
+			t2 += temp;
+			allScores[username]['averages'][9] = t2/allScores[username]['shown'][9];
+			let t3 = allScores['metrics']['shown'][9] * allScores['metrics']['averages'][9];
+			allScores['metrics']['shown'][9] += 1;
+			t3 += temp;
+			allScores['metrics']['averages'][9] = t3/allScores['metrics']['shown'][9];
+			allScores['metrics']['shown'][9] += 1;
 		}
 	}
 	
@@ -387,10 +469,12 @@ function DrawLowerLeftPanel(){
 	//it should also show the difference between the users current and previous session
 	//should print allscores and digit averages for current digit.
 	//should also be printing m with an indication that it is the current score.
-	foo= Math.floor(m * 100)/100
-	document.getElementById("output_box").innerHTML = "Dig Av:" + digitAverages + "<br>Dig Count: " + timesDigitShown;
-	document.getElementById("output_box").innerHTML = "Current Av:" + foo + "past av" +allScores[username]["averages"][DigitToShow] + 
-	"<br>Dig Count: " + timesDigitShown;
+	flop = m *1.47058823529;
+	foo= Math.floor(flop * 100)/100
+	foo = foo * 100;
+	//document.getElementById("output_box").innerHTML = "Dig Average:" + digitAverages+ "<br>Dig Count: " + timesDigitShown;
+	document.getElementById("output_box").innerHTML = "Current Average:" + foo + "%" + "Past Average: " + allScores[username]["averages"][DigitToShow] + "%" + 
+	"<br>Times you've seen this digit: " + allScores[username]['shown'][DigitToShow] + "<br>Other users Average: " + allScores['metrics']["averages"][DigitToShow] + "%" +"Your average: " + allScores[username]["averages"][DigitToShow] + "%";
 }
 
 function DrawLowerRightPanel(){
