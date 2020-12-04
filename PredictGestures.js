@@ -15,18 +15,25 @@ var nineexists = 0;
 //let numFeatures = nj.zeros(150, 4);
 var timeSinceLastDigitChange = new Date();
 var averageM = 0;
-
+var digitEquations = [0,1,2,3,4,5,6,7,8,9];
+var equationSymbols = ['+', '-'];
 // averages and times shown for currently logged in player
 var digitAverages = [];
 var timesDigitShown =[];
 var allScores = {};
+var alternateScore;
 allScores["metrics"] = {};
 allScores['metrics']['averages'] =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 allScores['metrics']['shown'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
 
-
+//final functionality: Ensure that if user time to sign gets above a certain threshold they are returned to instructional signing.
+// Create procedural math equations that are equal to one of the digits the user has learned to sign, and print them on the screen.
+// create a list of digits (0-9), pick randomly from that list two digits, and a random equation symbol (+ or -) and throw that up on the screen.
+//change accuracy detector such that the answer to the equation is equal to digit to show,
+//if the answer would be greater than 9 or less than 0, reset and make a different equation
+//Office hours, learn how to make a deep copy of the ML5 array.
 
 
 
@@ -661,6 +668,7 @@ function DetermineWhetherToSwitchDigits(){
 		
 		SwitchDigits();
 	}
+	return SwitchDigits();
 	
 }
 
@@ -744,15 +752,50 @@ function SwitchDigits(){
 	}
 	else if(nineexists == 1 && allottedTime <= 10){
 		
-		rand = Math.random()*10;
-		rand = Math.floor(rand);
-		DigitToShow = rand+10;
+		DigitMath();
+		return true;
+		
+		
+		
+		
+		//print to screen ( firstDig + symbol + secondDig = ?)
+		
+		//DigitToShow = rand+10;
 		
 	}
 	else if(DigitToShow == 9){
 		//console.log(DigitToShow);
 		DigitToShow = 0;
 	}
+}
+function DigitMath(){
+	//ensure random integers are not greater than array size.
+	//ensure array calls are correct
+	//create box inside predict gestures HTML
+		rand = Math.random()*10;
+		rand = Math.floor(rand);
+		rand2 = Math.random()*10;
+		rand2 = Math.floor(rand2);
+		rand3 = Math.random()*10;
+		rand3 = Math.floor(rand);
+		firstDig = digitEquations[rand];
+		secondDig = digitEquations[rand2];
+		symbol = equationSymbols[rand3];
+		if(symbol == '+'){
+			if(firstDig + secondDig >= 10){
+				DigitMath();
+			}
+			alternateScore = firstDig + secondDig;
+		}
+		else{
+			if(firstDig - secondDig < 0){
+				DigitMath();
+			}
+			alternateScore = firstDig - secondDig;
+			
+		}
+		
+		
 }
 
 function DrawArrowLeft(){
@@ -1029,6 +1072,9 @@ function GotResults(err, result){
 		}
 		else{
 			x = DigitToShow;
+		}
+		if(SwitchDigits == true){
+			x = alternateScore;
 		}
 		c = parseInt(result.label);
 		n += 1;
