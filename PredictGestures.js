@@ -10,7 +10,7 @@ let d = 3;
 let c = 0;
 var programstate = 0;
 var DigitToShow = 7;
-var allottedTime = 15;
+var allottedTime = 10;
 var nineexists = 0;
 //let numFeatures = nj.zeros(150, 4);
 var timeSinceLastDigitChange = new Date();
@@ -22,6 +22,7 @@ var digitAverages = [];
 var timesDigitShown =[];
 var allScores = {};
 var alternateScore;
+var DigitMathBoolean = 0;
 allScores["metrics"] = {};
 allScores['metrics']['averages'] =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 allScores['metrics']['shown'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -236,7 +237,7 @@ function RecordUserData(){
 		}
 	}
 	else if(DigitToShow == 7){
-		console.log(DigitToShow + " " + TimeToSwitchDigits());
+		//console.log(DigitToShow + " " + TimeToSwitchDigits());
 		if(TimeToSwitchDigits()){
 			let t2 = allScores[username]['shown'][7] * allScores[username]['averages'][7];
 			allScores[username]['shown'][7] += 1;
@@ -345,7 +346,8 @@ function HandIsUncentered(){
 }
 
 function HandIsTooFarToTheLeft(){
-	xValues = framesOfData.slice([],[],[0,6,3]);
+	fclone = framesOfData.clone();
+	xValues = fclone.slice([],[],[0,6,3]);
 	currentXMean = xValues.mean();
 	
 	
@@ -358,9 +360,9 @@ function HandIsTooFarToTheLeft(){
 }
 
 function HandIsTooFarToTheRight(){
-	
+	fclone = framesOfData.clone();
 	// 0.5.... 0.7..... 0.5
-	xValues = framesOfData.slice([],[],[0,6,3]);
+	xValues = fclone.slice([],[],[0,6,3]);
 	currentXMean = xValues.mean();
 	
 	//shifted = currentXMean - 0.5;
@@ -377,7 +379,8 @@ function HandIsTooFarToTheRight(){
 }
 
 function HandIsTooFarForward(){
-	zValues = framesOfData.slice([],[],[2,6,3]);
+	fclone = framesOfData.clone();
+	zValues = fclone.slice([],[],[2,6,3]);
 	currentZMean = zValues.mean();
 
 	
@@ -391,7 +394,8 @@ function HandIsTooFarForward(){
 }
 
 function HandIsTooFarBack(){
-	zValues = framesOfData.slice([],[],[2,6,3]);
+	fclone = framesOfData.clone();
+	zValues = fclone.slice([],[],[2,6,3]);
 	currentZMean = zValues.mean();
 	
 	
@@ -404,7 +408,8 @@ function HandIsTooFarBack(){
 }
 
 function HandIsTooHigh(){
-	yValues = framesOfData.slice([],[],[1,6,3]);
+	fclone = framesOfData.clone();
+	yValues = fclone.slice([],[],[1,6,3]);
 	currentYMean = yValues.mean();
 	
 	
@@ -416,7 +421,8 @@ function HandIsTooHigh(){
 }
 
 function HandIsTooLow(){
-	yValues = framesOfData.slice([],[],[1,6,3]);
+	fclone = framesOfData.clone();
+	yValues = fclone.slice([],[],[1,6,3]);
 	currentYMean = yValues.mean();
 	
 	
@@ -666,19 +672,21 @@ function DetermineWhetherToSwitchDigits(){
 	if(TimeToSwitchDigits()){
 		
 		
+		//SwitchDigits();
 		SwitchDigits();
 	}
-	return SwitchDigits();
+	
 	
 }
 
 function TimeToSwitchDigits(){
 		currentTime = new Date();
-		inMiliseconds = currentTime - timeSinceLastDigitChange
+		inMiliseconds = currentTime - timeSinceLastDigitChange;
 		inSeconds = inMiliseconds / 1000;
+		//console.log(inSeconds, allottedTime);
 	if( m >= .68){
 		
-		
+		//console.log('fuckingfuck');
 		
 		
 		return true;
@@ -705,7 +713,7 @@ function TimeToSwitchDigits(){
 //digit to show is an int, so the digit to show for the equation will be 10+ the answer
 function SwitchDigits(){
 	currentTime = new Date();
-	console.log("switch Digits" + DigitToShow);
+	//console.log("switch Digits" + DigitToShow);
 	timeSinceLastDigitChange = currentTime;
 	allottedTime = allottedTime - 1;
 	if(allottedTime <= 4){
@@ -715,7 +723,7 @@ function SwitchDigits(){
 	}
 	m = 0;
 	if(inSeconds >= allottedTime){
-		allottedTime+= 1;
+		allottedTime+= 2;
 		timeSinceLastDigitChange = currentTime;
 		n = 0;
 		m = 0;
@@ -750,11 +758,13 @@ function SwitchDigits(){
 	else if(DigitToShow == 8){
 		DigitToShow = 9;
 	}
-	else if(nineexists == 1 && allottedTime <= 10){
+	else if(nineexists == 1 && allottedTime <= 17){
 		
 		DigitMath();
-		return true;
-		
+	
+		if(allottedTime == 20){
+			DigitToShow = 0
+		}
 		
 		
 		
@@ -794,12 +804,14 @@ function DigitMath(){
 			alternateScore = firstDig - secondDig;
 			
 		}
+		DigitMathBoolean = 1;
 		
 		
 }
 
 function DrawArrowLeft(){
 	tooright.resize(600, 0);
+	tint(255,255);
 	image(tooright, 1000,0);
 }
 //comment out all of the function back to just placing the warning message
@@ -811,26 +823,31 @@ function DrawArrowLeft(){
 // variable that determines timer, access the average
 function DrawArrowRight(){
 	tooleft.resize(600, 0);
+	tint(255,255);
 	image (tooleft, 1000,0);
 }
 
 function DrawArrowBack(){
 	tooforward.resize(600, 0);
+	tint(255,255);
 	image (tooforward, 1000,0);
 }
 
 function DrawArrowForth(){
 	toobackward.resize(600, 0);
+	tint(255,255);
 	image (toobackward, 1000,0);
 }
 
 function DrawArrowUp(){
 	toohigh.resize(600, 0);
+	tint(255,255);
 	image (toohigh, 1000,0);
 }
 
 function DrawArrowDown(){
 	toolow.resize(600, 0);
+	tint(255,255);
 	image (toolow, 1000,0);
 }
 
@@ -885,6 +902,7 @@ function Train(){
 		features8M2 = train8McCallion2.pick(null,null,null,i);
 		features8M3 = train8McCallion3.pick(null,null,null,i);
 		features8M4 = train8McCallion4.pick(null,null,null,i);
+		features8M5 = train8McCallion5.pick(null,null,null,i);
 		features9 = train9.pick(null,null,null,i);
 		features9M = train9McCallion.pick(null,null,null,i);
 		features9B = train9Bongard.pick(null,null,null,i);
@@ -926,6 +944,7 @@ function Train(){
 		features8M2 = features8M2.reshape(1,120);
 		features8M3 = features8M3.reshape(1,120);
 		features8M4 = features8M4.reshape(1,120);
+		features8M5 = features8M4.reshape(1,120);
 		features9 = features9.reshape(1,120);
 		features9M = features9M.reshape(1,120);
 		features9B = features9B.reshape(1,120);
@@ -967,6 +986,7 @@ function Train(){
 		knnClassifier.addExample(features8M2.tolist(), 8);
 		knnClassifier.addExample(features8M3.tolist(), 8);
 		knnClassifier.addExample(features8M4.tolist(), 8);
+		knnClassifier.addExample(features8M5.tolist(), 8);
 		knnClassifier.addExample(features9.tolist(), 9);
 		knnClassifier.addExample(features9M.tolist(), 9);
 		knnClassifier.addExample(features9B.tolist(), 9);
@@ -998,8 +1018,9 @@ function Test(){
 	
 }
 function CleanData(){
-	xValues = framesOfData.slice([],[],[0,6,3]);
-	yValues = framesOfData.slice([],[],[1,6,3]);
+	cleanClone = framesOfData.clone();
+	xValues = cleanClone.slice([],[],[0,6,3]);
+	yValues = cleanClone.slice([],[],[1,6,3]);
 	//console.log("--------");
 	
 	//console.log(typeof framesOfData);
@@ -1016,20 +1037,20 @@ function CleanData(){
 		
 			currentColumn = j;
 			currentRow= i;
-			currentX = framesOfData.get(currentRow,currentColumn,0);
+			currentX = cleanClone.get(currentRow,currentColumn,0);
 			shiftedX = currentX + horizontalShift;
-			framesOfData.set(currentRow,currentColumn,0, shiftedX);
-			currentX = framesOfData.get(currentRow,currentColumn,3);
+			cleanClone.set(currentRow,currentColumn,0, shiftedX);
+			currentX = cleanClone.get(currentRow,currentColumn,3);
 			shiftedX = currentX + horizontalShift;
-			framesOfData.set(currentRow,currentColumn,3, shiftedX);
+			cleanClone.set(currentRow,currentColumn,3, shiftedX);
 			
 			
-			currentY = framesOfData.get(currentRow,currentColumn,1);
+			currentY = cleanClone.get(currentRow,currentColumn,1);
 			shiftedY = currentY + verticalShift;
-			framesOfData.set(currentRow,currentColumn,1, shiftedY);
-			currentY = framesOfData.get(currentRow,currentColumn,4);
+			cleanClone.set(currentRow,currentColumn,1, shiftedY);
+			currentY = cleanClone.get(currentRow,currentColumn,4);
 			shiftedY = currentY + verticalShift;
-			framesOfData.set(currentRow,currentColumn,4, shiftedY);
+			cleanClone.set(currentRow,currentColumn,4, shiftedY);
 		}
 	}
 
@@ -1041,8 +1062,8 @@ function CleanData(){
 	
 }
 function CleanDataZ(){
-
-	zValues = framesOfData.slice([],[],[2,6,3]);
+	cleanClonez = framesOfData.clone();
+	zValues = cleanClonez.slice([],[],[2,6,3]);
 	currentZMean = zValues.mean();
 	zShift = 0.5 - currentZMean;
 	for(i = 0; i < 5; i++){
@@ -1053,12 +1074,12 @@ function CleanDataZ(){
 			currentRow= i;
 			
 			
-			currentZ = framesOfData.get(currentRow,currentColumn,2);
+			currentZ = cleanClonez.get(currentRow,currentColumn,2);
 			shiftedZ = currentZ + zShift;
-			framesOfData.set(currentRow,currentColumn,2, shiftedZ);
-			currentZ = framesOfData.get(currentRow,currentColumn,5);
+			cleanClonez.set(currentRow,currentColumn,2, shiftedZ);
+			currentZ = cleanClonez.get(currentRow,currentColumn,5);
 			shiftedZ = currentZ + zShift;
-			framesOfData.set(currentRow,currentColumn,5, shiftedZ);
+			cleanClonez.set(currentRow,currentColumn,5, shiftedZ);
 		}
 	}
 	//zValues = framesOfData.slice([],[],[2,6,3]);
@@ -1073,14 +1094,14 @@ function GotResults(err, result){
 		else{
 			x = DigitToShow;
 		}
-		if(SwitchDigits == true){
+		if(DigitMathBoolean == 1){
 			x = alternateScore;
 		}
 		c = parseInt(result.label);
 		n += 1;
 		m = (((n - 1)* m + (parseInt(result.label) == x))/ n); 
 		//console.log(err);
-		//console.log(c,m);
+		console.log(c,m);
 		//console.log(parseInt(result.label));
 	}
 	else{
