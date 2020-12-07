@@ -10,7 +10,7 @@ let d = 3;
 let c = 0;
 var programstate = 0;
 var DigitToShow = 7;
-var allottedTime = 10;
+var allottedTime = 12;
 var nineexists = 0;
 //let numFeatures = nj.zeros(150, 4);
 var timeSinceLastDigitChange = new Date();
@@ -26,7 +26,10 @@ var DigitMathBoolean = 0;
 allScores["metrics"] = {};
 allScores['metrics']['averages'] =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 allScores['metrics']['shown'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
+var timeLeft;
+var firstDig;
+var secondDig;
+var symbol;
 
 
 //final functionality: Ensure that if user time to sign gets above a certain threshold they are returned to instructional signing.
@@ -111,6 +114,7 @@ function SignIn(){
 	
 	console.log(list.innerHTML);
 	console.log(username);
+	document.getElementById("output_box2").innerHTML =" ";
 	if((username in allScores) == false) {
 		allScores[username] = {};
 		allScores[username]['averages'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -132,7 +136,7 @@ function SignIn(){
 //
 function RecordUserData(){
 	averageM += m;
-	flah = m *1.47058823529;
+	flah = m *2;
 	temp = Math.floor(flah * 100)/100;
 	temp = temp * 100;
 	//check what digittoshow is, many if else statments, checking which average
@@ -440,7 +444,7 @@ function HandleState0(frame) {
 
 function HandleState1(frame){
 	HandleFrame(frame);
-	//Test();
+	Test();
 	if ( HandIsTooFarToTheLeft() ) {
 		//console.log('right arrow');
            DrawArrowRight();
@@ -482,12 +486,13 @@ function DrawLowerLeftPanel(){
 	//it should also show the difference between the users current and previous session
 	//should print allscores and digit averages for current digit.
 	//should also be printing m with an indication that it is the current score.
-	flop = m *1.47058823529;
+	flop = m *2;
 	foo= Math.floor(flop * 100)/100
 	foo = foo * 100;
 	//document.getElementById("output_box").innerHTML = "Dig Average:" + digitAverages+ "<br>Dig Count: " + timesDigitShown;
 	document.getElementById("output_box").innerHTML = "Current Average:" + foo + "%" + "Past Average: " + allScores[username]["averages"][DigitToShow] + "%" + 
-	"<br>Times you've seen this digit: " + allScores[username]['shown'][DigitToShow] + "<br>Other users Average: " + allScores['metrics']["averages"][DigitToShow] + "%" +"Your average: " + allScores[username]["averages"][DigitToShow] + "%";
+	"<br>Times you've seen this digit: " + allScores[username]['shown'][DigitToShow] + "<br>Other users Average: " + allScores['metrics']["averages"][DigitToShow] + "%" +"Your average: " + allScores[username]["averages"][DigitToShow] + "%" + 
+	"<br>Time left to sign digit: " + (allottedTime - timeLeft);
 }
 
 function DrawLowerRightPanel(){
@@ -499,6 +504,7 @@ function DrawLowerRightPanel(){
 		image(zeropic, window.innerWidth/2, window.innerHeight/2);
 		tint(255,0 + 255*m);
 		image(zeropica, window.innerWidth/2, window.innerHeight/2);
+		document.getElementById("output_box2").innerHTML ="Sign This Digit!! You Can Do It!!!! ";
 	}
 	else if(DigitToShow == 1){
 		onepic.resize(400, 0);
@@ -576,15 +582,10 @@ function DrawLowerRightPanel(){
 	}
 	else if (DigitToShow == 10){
 		//blah blah
-		zeroeq.resize(400, 0);
-		tint(255,255 -511*m);
-		image(zeroeq, window.innerWidth/2, window.innerHeight/2);
-		zeropica.resize(400, 0);
-		tint(255,0 + 255*m);
-		image(zeropica, window.innerWidth/2, window.innerHeight/2);
+		
 		
 	}
-	else if (DigitToShow == 11){
+	/*else if (DigitToShow == 11){
 		//blah blah
 		oneeq.resize(400, 0);
 		tint(255,255 -511*m);
@@ -664,16 +665,17 @@ function DrawLowerRightPanel(){
 		ninepica.resize(400, 0);
 		tint(255,0 + 255*m);
 		image(ninepica, window.innerWidth/2, window.innerHeight/2);
-	}
+	}*/
 	
 }
 function DetermineWhetherToSwitchDigits(){
-		;
+		
 	if(TimeToSwitchDigits()){
 		
 		
 		//SwitchDigits();
 		SwitchDigits();
+		console.log(DigitToShow);
 	}
 	
 	
@@ -683,8 +685,9 @@ function TimeToSwitchDigits(){
 		currentTime = new Date();
 		inMiliseconds = currentTime - timeSinceLastDigitChange;
 		inSeconds = inMiliseconds / 1000;
+		timeLeft = inSeconds;
 		//console.log(inSeconds, allottedTime);
-	if( m >= .68){
+	if( m >= .50){
 		
 		//console.log('fuckingfuck');
 		
@@ -716,8 +719,8 @@ function SwitchDigits(){
 	//console.log("switch Digits" + DigitToShow);
 	timeSinceLastDigitChange = currentTime;
 	allottedTime = allottedTime - 1;
-	if(allottedTime <= 4){
-		allottedTime = 5;
+	if(allottedTime <= 6){
+		allottedTime = 7;
 		n = 0;
 		//console.log(allottedTime);
 	}
@@ -761,10 +764,13 @@ function SwitchDigits(){
 	else if(nineexists == 1 && allottedTime <= 17){
 		
 		DigitMath();
-	
-		if(allottedTime == 20){
-			DigitToShow = 0
-		}
+		document.getElementById("output_box2").innerHTML ="Solve this equation with the power of ASL!! " + firstDig + symbol + secondDig;
+		document.getElementById("output_box").innerHTML = "Current Average:" + foo + "%" + "<br>Time left to sign digit: " + (allottedTime - timeLeft);
+		DigitToShow = 10
+	if(allottedTime >= 17){
+		DigitToShow = 0;
+		DigitMathBoolean = 0;
+	}
 		
 		
 		
@@ -772,12 +778,16 @@ function SwitchDigits(){
 		
 		//DigitToShow = rand+10;
 		
+		
 	}
-	else if(DigitToShow == 9){
+	else {
 		//console.log(DigitToShow);
 		DigitToShow = 0;
 	}
+	
 }
+// give more time to sign digit at the start,
+// make sure asl equations dissapear if user switches back to learning digits
 function DigitMath(){
 	//ensure random integers are not greater than array size.
 	//ensure array calls are correct
@@ -786,23 +796,31 @@ function DigitMath(){
 		rand = Math.floor(rand);
 		rand2 = Math.random()*10;
 		rand2 = Math.floor(rand2);
-		rand3 = Math.random()*10;
-		rand3 = Math.floor(rand);
+		rand3 = Math.random()*2;
+		rand3 = Math.floor(rand3);
 		firstDig = digitEquations[rand];
 		secondDig = digitEquations[rand2];
 		symbol = equationSymbols[rand3];
 		if(symbol == '+'){
 			if(firstDig + secondDig >= 10){
 				DigitMath();
+				//alternateScore = firstDig + secondDig;
 			}
-			alternateScore = firstDig + secondDig;
+			
 		}
 		else{
 			if(firstDig - secondDig < 0){
 				DigitMath();
+				//alternateScore = firstDig - secondDig;
 			}
-			alternateScore = firstDig - secondDig;
+		
 			
+		}
+		if(symbol == '-'){
+			alternateScore = firstDig - secondDig;
+		}
+		else if (symbol == '+'){
+			alternateScore = firstDig + secondDig;
 		}
 		DigitMathBoolean = 1;
 		
@@ -986,7 +1004,7 @@ function Train(){
 		knnClassifier.addExample(features8M2.tolist(), 8);
 		knnClassifier.addExample(features8M3.tolist(), 8);
 		knnClassifier.addExample(features8M4.tolist(), 8);
-		knnClassifier.addExample(features8M5.tolist(), 8);
+		//knnClassifier.addExample(features8M5.tolist(), 8);
 		knnClassifier.addExample(features9.tolist(), 9);
 		knnClassifier.addExample(features9M.tolist(), 9);
 		knnClassifier.addExample(features9B.tolist(), 9);
