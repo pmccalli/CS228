@@ -99,7 +99,7 @@ function SignIn(){
 	DigitToShow = 0;
 	allottedTime = 10;
 	nineexists = 0;
-	
+	DigitMathBoolean = 0;
 	username = document.getElementById(`username`).value;
 	if(IsNewUser(username,list) == true) {
 		CreateNewUser(username,list);
@@ -472,7 +472,9 @@ function HandleState1(frame){
 function HandleState2(frame){
 		HandleFrame(frame);
 		DrawLowerRightPanel();
+		
 		DrawLowerLeftPanel();
+		
 		RecordUserData()
 		DetermineWhetherToSwitchDigits();
 		
@@ -481,18 +483,19 @@ function HandleState2(frame){
 }
 
 function DrawLowerLeftPanel(){
-	//this function should draw the users current digit score in the lower left panel
-	//it should also show their total average with that digit, and the averages of past users
-	//it should also show the difference between the users current and previous session
-	//should print allscores and digit averages for current digit.
-	//should also be printing m with an indication that it is the current score.
+
 	flop = m *2;
 	foo= Math.floor(flop * 100)/100
 	foo = foo * 100;
 	//document.getElementById("output_box").innerHTML = "Dig Average:" + digitAverages+ "<br>Dig Count: " + timesDigitShown;
+	if(DigitMathBoolean == 0){
 	document.getElementById("output_box").innerHTML = "Current Average:" + foo + "%" + "Past Average: " + allScores[username]["averages"][DigitToShow] + "%" + 
 	"<br>Times you've seen this digit: " + allScores[username]['shown'][DigitToShow] + "<br>Other users Average: " + allScores['metrics']["averages"][DigitToShow] + "%" +"Your average: " + allScores[username]["averages"][DigitToShow] + "%" + 
 	"<br>Time left to sign digit: " + (allottedTime - timeLeft);
+	}
+	else if(DigitMathBoolean == 1){
+		document.getElementById("output_box").innerHTML = "Current Average:" + foo + "%" + "<br>Time left to sign digit: " + (allottedTime - timeLeft);
+	}
 }
 
 function DrawLowerRightPanel(){
@@ -736,6 +739,7 @@ function SwitchDigits(){
 	
 	if(DigitToShow == 0){
 		DigitToShow = 1;
+		DigitMathBoolean = 0;
 	}
 	else if(DigitToShow == 1){
 		DigitToShow = 2;
@@ -761,13 +765,13 @@ function SwitchDigits(){
 	else if(DigitToShow == 8){
 		DigitToShow = 9;
 	}
-	else if(nineexists == 1 && allottedTime <= 17){
+	else if(nineexists == 1 && allottedTime <= 10){
 		
 		DigitMath();
 		document.getElementById("output_box2").innerHTML ="Solve this equation with the power of ASL!! " + firstDig + symbol + secondDig;
 		document.getElementById("output_box").innerHTML = "Current Average:" + foo + "%" + "<br>Time left to sign digit: " + (allottedTime - timeLeft);
 		DigitToShow = 10
-	if(allottedTime >= 17){
+	if(allottedTime > 10){
 		DigitToShow = 0;
 		DigitMathBoolean = 0;
 	}
